@@ -1,4 +1,5 @@
-﻿@{
+﻿@model ST10296167_PROG7312_POE.Models.Issue
+@{
     ViewData["Title"] = "Report Issues";
 }
 
@@ -7,5 +8,133 @@
 </head>
 
 <body>
+    <!-- Back Button overlay, ignored by page flow -->
+    <a asp-action="Index" asp-controller="Home"
+       class="btn btn-secondary position-absolute"
+       style="top: 70px; left: 10px; z-index: 1000;">
+        &larr; Back
+    </a>
 
+    <div class="text-center mt-5">
+        <h1>Report Issue</h1>
+
+        <div class="mx-auto" style="max-width: 800px;">
+            <hr />
+            <form asp-action="SubmitIssueReport" method="post" enctype="multipart/form-data">
+                @Html.HiddenFor(model => model.ID)
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="row">
+                    <!-- Left Section -->
+                    <div class="col-md-6">
+
+                        <!-- Location -->
+                        <label class="form-label fw-bold d-block text-start">Location</label>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Address"
+                                   class="form-control @(ViewData.ModelState["Address"]?.Errors.Count > 0 ? "is-invalid" : "")"
+                                   placeholder="Street Address" />
+                            <label asp-for="Address">Street Address</label>
+                            <span asp-validation-for="Address" class="invalid-feedback"></span>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <input asp-for="Suburb"
+                                   class="form-control @(ViewData.ModelState["Suburb"]?.Errors.Count > 0 ? "is-invalid" : "")"
+                                   placeholder="Suburb" />
+                            <label asp-for="Suburb">Suburb</label>
+                            <span asp-validation-for="Suburb" class="invalid-feedback"></span>
+                        </div>
+
+                        <!-- Category -->
+                        <label class="form-label fw-bold d-block text-start">Category</label>
+                        <select asp-for="Category"
+                                class="form-select @(ViewData.ModelState["Category"]?.Errors.Count > 0 ? "is-invalid" : "")">
+                            <option hidden disabled selected value="">Select Category</option>
+                            <option value="Water Leak">Water Leak</option>
+                            <option value="Electricity">Electricity</option>
+                            <option value="Road Damage">Road Damage</option>
+                            <option value="Waste Management">Waste Management</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <span asp-validation-for="Category" class="invalid-feedback"></span>
+                    </div>
+
+                    <!-- Right Section -->
+                    <div class="col-md-6">
+
+                        <!-- Description -->
+                        <label class="form-label fw-bold d-block text-start">Description</label>
+
+                        <div class="form-floating mb-3" style="height: 133px;">
+                            <textarea asp-for="Description"
+                                      class="form-control @(ViewData.ModelState["Description"]?.Errors.Count > 0 ? "is-invalid" : "")"
+                                      placeholder="Issue Description" style="height: 100%;"></textarea>
+                            <label asp-for="Description">Description</label>
+                            <span asp-validation-for="Description" class="invalid-feedback"></span>
+                        </div>
+
+                        <!-- Upload Files -->
+                        <label for="Files" class="form-label fw-bold d-block text-start">Upload Files</label>
+
+                        <div class="mb-3">
+                            <input type="file" id="Files" name="Files" class="form-control" multiple />
+                            <div class="text-danger">
+                                <span asp-validation-for="Files"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit -->
+                <div class="d-flex justify-content-center mt-4">
+                    <button type="submit" class="btn btn-success w-50" style="height: 45px;">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
+
+<!-- Used Claude to help provide scripts to highlight inputs, clear invalid input on type and show valid input -->
+@section Scripts {
+    <script>
+        $(function() {
+            var currentError = null;
+            var fields = ['Address', 'Suburb', 'Category', 'Description'];
+
+            function showError(field) {
+                $('.is-invalid, .is-valid').removeClass('is-invalid is-valid');
+                $('.invalid-feedback').text('');
+
+                var $f = $('[name="' + field + '"]');
+                $f.addClass('is-invalid');
+                $f.siblings('.invalid-feedback').text($f.data('val-required'));
+                currentError = field;
+            }
+
+            // Real-time validation
+            $('input, textarea, select').on('input change', function() {
+                var $f = $(this), name = $f.attr('name'), val = $f.val();
+
+                if (currentError === name && val?.trim()) {
+                    $f.removeClass('is-invalid').addClass('is-valid');
+                    $f.siblings('.invalid-feedback').text('');
+                    currentError = null;
+                } else if (val?.trim() && !currentError) {
+                    $f.addClass('is-valid');
+                }
+            });
+
+            // Form submission
+            $('form').on('submit', function(e) {
+                var firstEmpty = fields.find(f => !$('[name="' + f + '"]').val()?.trim());
+                if (firstEmpty) {
+                    e.preventDefault();
+                    showError(firstEmpty);
+                    $('[name="' + firstEmpty + '"]').focus();
+                }
+            });
+        });
+    </script>
+}
