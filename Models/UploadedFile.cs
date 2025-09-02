@@ -7,6 +7,8 @@ namespace ST10296167_PROG7312_POE.Models
         public int ID { get; set; }
 
         public string FileName { get; set; }
+        public string MimeType { get; set; }
+        public long Size { get; set; }
         public string FilePath { get; set; }
 
         // FK

@@ -25,6 +25,6 @@ namespace ST10296167_PROG7312_POE.Models
         public string Description { get; set; }
 
         // Navigation property
-        public ICollection<UploadedFile>? Files{ get; set; }
+        public LinkedList<UploadedFile>? Files{ get; set; } = new LinkedList<UploadedFile>();
     }
 }

@@ -26,16 +26,15 @@ namespace ST10296167_PROG7312_POE.Controllers
         // Methods
         //------------------------------------------------------------------------------------------------------------------------------------------//
         [HttpPost]
-        public IActionResult SubmitIssueReport(Issue issue)
+        public async Task<IActionResult> SubmitIssueReport(Issue issue, IFormFile[]? files)
         {
             if (!ModelState.IsValid)
             {
-                Console.WriteLine("Modelstate not valud");
+                Console.WriteLine("Modelstate not valid");
                 return View("Report", issue);
             }
 
-            var result = _reportService.AddIssueAsync(issue);
-            Console.WriteLine(result);
+            var result = await _reportService.AddIssueAsync(issue, files);
 
             if (result)
             {
@@ -50,3 +49,4 @@ namespace ST10296167_PROG7312_POE.Controllers
         //------------------------------------------------------------------------------------------------------------------------------------------//
     }
 }
+//--------------------------------------------------------X END OF FILE X-------------------------------------------------------------------//

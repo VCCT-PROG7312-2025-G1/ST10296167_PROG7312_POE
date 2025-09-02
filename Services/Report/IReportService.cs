@@ -2,6 +2,7 @@
 {
     public interface IReportService
     {
-        bool AddIssueAsync(Models.Issue issue);
+        Task<bool> AddIssueAsync(Models.Issue issue, IFormFile[]? files);
+
     }
 }

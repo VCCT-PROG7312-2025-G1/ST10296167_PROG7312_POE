@@ -14,6 +14,9 @@ namespace ST10296167_PROG7312_POE
 
             var app = builder.Build();
 
+            var dataStore = app.Services.GetRequiredService<ST10296167_PROG7312_POE.Data.DataStore>();
+            dataStore.ClearUploadedFiles();
+
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
