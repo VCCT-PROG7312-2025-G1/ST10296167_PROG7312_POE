@@ -4,7 +4,6 @@ namespace ST10296167_PROG7312_POE.Models
 {
     public class UploadedFile
     {
-        [Required]
         public int ID { get; set; }
 
         public string FileName { get; set; }

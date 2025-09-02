@@ -1,16 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ST10296167_PROG7312_POE.Models;
+using ST10296167_PROG7312_POE.Services.Report;
 
 namespace ST10296167_PROG7312_POE.Controllers
 {
     public class ReportController : Controller
     {
-
+        private readonly IReportService _reportService;
         // Constructor
         //------------------------------------------------------------------------------------------------------------------------------------------//
-        public ReportController()
+        public ReportController(IReportService reportService)
         {
-
+            _reportService = reportService;
         }
         //------------------------------------------------------------------------------------------------------------------------------------------//
 
@@ -25,13 +26,26 @@ namespace ST10296167_PROG7312_POE.Controllers
         // Methods
         //------------------------------------------------------------------------------------------------------------------------------------------//
         [HttpPost]
-        public async Task<IActionResult> SubmitIssueReport(Issue issue)
+        public IActionResult SubmitIssueReport(Issue issue)
         {
             if (!ModelState.IsValid)
             {
+                Console.WriteLine("Modelstate not valud");
                 return View("Report", issue);
             }
-            return RedirectToAction("Index", "Home");
+
+            var result = _reportService.AddIssueAsync(issue);
+            Console.WriteLine(result);
+
+            if (result)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                return View("Report", issue);
+            }
+
         }
         //------------------------------------------------------------------------------------------------------------------------------------------//
     }

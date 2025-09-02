@@ -9,6 +9,9 @@ namespace ST10296167_PROG7312_POE
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddSingleton<Data.DataStore>();
+            builder.Services.AddScoped<Services.Report.IReportService, Services.Report.ReportService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
