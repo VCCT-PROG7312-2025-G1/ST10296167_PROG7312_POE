@@ -1,7 +1,11 @@
 ﻿@model ST10296167_PROG7312_POE.Models.Issue
 
 <head>
-
+    <style>
+        .invalid-feedback[data-valmsg-for="Files"] {
+            display: block !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -75,9 +79,10 @@
                         <label for="Files" class="form-label fw-bold d-block text-start">Upload Files</label>
 
                         <div class="mb-3">
-                            <input type="file" id="Files" name="Files" class="form-control" multiple />
+                            <input type="file" id="Files" name="Files" class="form-control" multiple
+                            accept=".png,.jpg,.jpeg,.txt,.pdf,.doc,.docx"/>
                             <div class="text-danger">
-                                <span asp-validation-for="Files"></span>
+                                <span asp-validation-for="Files" class="invalid-feedback"></span>
                             </div>
                         </div>
                     </div>
@@ -92,7 +97,7 @@
     </div>
 </body>
 
-<!-- Used Claude to help provide scripts to highlight inputs, clear invalid input on type and show valid input -->
+<!-- Used Claude to help provide scripts to highlight inputs, clear invalid input on type, show valid input, and validate files -->
 @section Scripts {
     <script>
         $(function() {
@@ -110,7 +115,7 @@
             }
 
             // Real-time validation
-            $('input, textarea, select').on('input change', function() {
+            $('input:not(#Files), textarea, select').on('input change', function() {
                 var $f = $(this), name = $f.attr('name'), val = $f.val();
 
                 if (currentError === name && val?.trim()) {
@@ -132,5 +137,32 @@
                 }
             });
         });
+
+        // File validation 
+        $('#Files').on('change', function () {
+            const allowedTypes = ['image/jpeg', 'image/png', 'text/plain', 'application/pdf',  'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+            const maxSize = 5 * 1024 * 1024; // 5 MB
+            const $validationSpan = $('.invalid-feedback[data-valmsg-for="Files"]');
+
+            $(this).removeClass('is-invalid is-valid'); 
+            $validationSpan.text("");
+
+            for (let file of this.files) {
+                if (!allowedTypes.includes(file.type)) {
+                    $validationSpan.text(`File type not allowed: ${file.name}`);
+                    $(this).addClass('is-invalid');
+                    this.value = "";
+                    return;
+                }
+                if (file.size > maxSize) {
+                    $validationSpan.text(`File too large (max 5MB): ${file.name}`);
+                    $(this).addClass('is-invalid');
+                    this.value = "";
+                    return;
+                }
+            }
+        });
+
     </script>
 }
