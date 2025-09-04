@@ -59,7 +59,7 @@
     }
 
     <!-- Back Button -->
-    <a asp-action="Index" asp-controller="Home"
+    <a asp-action="ReportMenu" asp-controller="Report"
        class="btn btn-secondary position-absolute"
        style="top: 70px; left: 10px; z-index: 1000;">
         &larr; Back
@@ -187,7 +187,7 @@
                         </div>
                     </div>
                     <div class="modal-footer border-0 pt-0">
-                        <a asp-action="Index" asp-controller="Home" class="btn btn-outline-secondary">Skip</a>
+                        <a asp-action="ReportMenu" asp-controller="Report" class="btn btn-outline-secondary">Skip</a>
                         <button type="submit" class="btn btn-primary">Submit Rating</button>
                     </div>
                 </form>
@@ -267,7 +267,7 @@
             @if (TempData["ShowRatingModal"] != null)
             {
                     <text>
-                    setTimeout(() => $('#ratingModal').modal('show'), 1000);
+                    setTimeout(() => $('#ratingModal').modal('show'), 740);
                     </text>
             }
 
@@ -276,7 +276,7 @@
             });
 
             // Dismiss success message
-            setTimeout(() => $('.alert-success').alert('close'), 1000);
+            setTimeout(() => $('.alert-success').alert('close'), 750);
         });
 
         $('form[action*="SubmitRating"]').on('submit', function(e) {

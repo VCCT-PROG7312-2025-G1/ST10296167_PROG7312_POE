@@ -58,6 +58,11 @@ namespace ST10296167_PROG7312_POE.Services.Report
             }
         }
 
+        public Dictionary<int, Issue> GetAllIssues()
+        {
+            return _dataStore.ReportedIssues;
+        }
+
         // Save a uploaded file to a temporary directory and return the file path
         public async Task<string> SaveFileToDisk(IFormFile file)
         {
@@ -90,6 +95,25 @@ namespace ST10296167_PROG7312_POE.Services.Report
                 Console.WriteLine($"User Feedback: {feedback}");
             }
             Console.WriteLine("Feedback saved.");
+        }
+
+        // Retrueve all files associated with a specific issue ID
+        public UploadedFile? GetFileById(int fileId)
+        {
+            foreach (var issue in _dataStore.ReportedIssues.Values)
+            {
+                if (issue.Files != null)
+                {
+                    foreach (var file in issue.Files)
+                    {
+                        if (file.ID == fileId)
+                        {
+                            return file;
+                        }
+                    }
+                }
+            }
+            return null;
         }
 
 

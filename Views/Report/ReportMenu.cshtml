@@ -1,0 +1,29 @@
+﻿<head>
+
+</head>
+
+<body>
+    <!-- Back Button -->
+    <a asp-action="Index" asp-controller="Home"
+       class="btn btn-secondary position-absolute"
+       style="top: 70px; left: 10px; z-index: 1000;">
+        &larr; Back
+    </a>
+
+    <div class="text-center mt-5">
+        <h1>Report Issues</h1>
+        <hr />
+
+        <div class="mt-4 d-flex flex-wrap justify-content-center gap-4">
+            <a asp-controller="Report" asp-action="Report" class="btn btn-light text-center shadow rounded p-3" style="width: 200px;">
+                <img src="~/images/add.png" alt="Report Issues" style="height: 100px;" class="mb-2 img-fluid" />
+                <div class="fw-semibold fs-6 text-dark">Add Issue Report</div>
+            </a>
+
+            <a asp-controller="Report" asp-action="ReportList" class="btn btn-light text-center shadow rounded p-3" style="width: 200px;">
+                <img src="~/images/list.png" alt="Events & Announcements" style="height: 100px;" class="mb-2 img-fluid" />
+                <div class="fw-semibold fs-6 text-dark">Submitted Reports</div>
+            </a>
+        </div>
+    </div>
+</body>
