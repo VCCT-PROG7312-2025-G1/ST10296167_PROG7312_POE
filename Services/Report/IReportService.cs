@@ -3,6 +3,7 @@
     public interface IReportService
     {
         Task<bool> AddIssueAsync(Models.Issue issue, IFormFile[]? files);
+        void SaveFeedback(int rating, string? feedback);
 
     }
 }

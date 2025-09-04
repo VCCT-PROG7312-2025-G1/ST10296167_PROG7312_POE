@@ -38,13 +38,41 @@ namespace ST10296167_PROG7312_POE.Controllers
 
             if (result)
             {
-                return RedirectToAction("Index", "Home");
+                TempData["ShowRatingModal"] = true;
+                TempData["SuccessMessage"] = "Your issue has been submitted successfully!";
+                return RedirectToAction("Report", new Issue());
             }
             else
             {
                 return View("Report", issue);
             }
 
+        }
+
+        [HttpPost]
+        public IActionResult SubmitRating(int rating, string? feedback)
+        {
+            if (rating < 1 || rating > 5)
+            {
+                TempData["RatingError"] = "Please select a valid rating.";
+                TempData["ShowRatingModal"] = true;
+                return RedirectToAction("Report");
+            }
+
+            try
+            {   
+                _reportService.SaveFeedback(rating, feedback);
+
+                TempData["RatingSuccess"] = "Thank you for your feedback!";
+                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving rating: {ex.Message}");
+                TempData["RatingError"] = "Failed to save rating. Please try again.";
+                TempData["ShowRatingModal"] = true;
+                return RedirectToAction("Report");
+            }
         }
         //------------------------------------------------------------------------------------------------------------------------------------------//
     }

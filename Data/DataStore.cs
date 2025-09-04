@@ -8,6 +8,7 @@ namespace ST10296167_PROG7312_POE.Data
         private int nextIssueId = 1;
         private int nextFileId = 1;
         public Dictionary<int, Issue> ReportedIssues { get; set; } = new Dictionary<int, Issue>();
+        public LinkedList<Feedback> UserFeedback { get; set; } = new LinkedList<Feedback>();
 
         // Constructor
         //------------------------------------------------------------------------------------------------------------------------------------------//

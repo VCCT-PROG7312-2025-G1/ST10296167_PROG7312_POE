@@ -5,11 +5,60 @@
         .invalid-feedback[data-valmsg-for="Files"] {
             display: block !important;
         }
+
+        .star-rating {
+            direction: ltr;
+            display: inline-flex;
+            flex-direction: row-reverse;
+            justify-content: center;
+            gap: 5px;
+        }
+
+            .star-rating input {
+                display: none;
+            }
+
+            .star-rating label {
+                cursor: pointer;
+                font-size: 2rem;
+                color: #ddd;
+                transition: all 0.3s ease;
+            }
+
+                .star-rating label:hover,
+                .star-rating label:hover ~ label,
+                .star-rating input:checked ~ label {
+                    color: #ffd700;
+                    transform: scale(1.1);
+                }
+
+                .star-rating label:hover {
+                    text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+                }
+
+        .feedback-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .success-message {
+            animation: slideInFromTop 0.5s ease-out;
+        }
+
     </style>
 </head>
 
 <body>
-    <!-- Back Button overlay, ignored by page flow -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show success-message position-fixed"
+             style="top: 80px; right: 20px; z-index: 1100; max-width: 400px;">
+            <strong>Success!</strong> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Back Button -->
     <a asp-action="Index" asp-controller="Home"
        class="btn btn-secondary position-absolute"
        style="top: 70px; left: 10px; z-index: 1000;">
@@ -95,11 +144,61 @@
             </form>
         </div>
     </div>
+
+    <!-- Rating Modal with Server-Side Form -->
+    <div class="modal fade" id="ratingModal" tabindex="-1" aria-labelledby="ratingModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form asp-action="SubmitRating" asp-controller="Report" method="post">
+                    @Html.AntiForgeryToken() 
+                    <div class="modal-header border-0 pb-0">
+                        <h5 class="modal-title mx-auto" id="ratingModalLabel">
+                            <i class="fas fa-thumbs-up text-success me-2"></i>Rate Our Service
+                        </h5>
+                    </div>
+                    <div class="modal-body text-center px-4">
+                        <p class="mb-4 text-muted">How would you rate your experience submitting this issue?</p>
+
+                        <!-- Star Rating -->
+                        <div class="star-rating mb-4">
+                            <input type="radio" name="rating" id="star5" value="5">
+                            <label for="star5" title="5 stars">★</label>
+                            <input type="radio" name="rating" id="star4" value="4">
+                            <label for="star4" title="4 stars">★</label>
+                            <input type="radio" name="rating" id="star3" value="3">
+                            <label for="star3" title="3 stars">★</label>
+                            <input type="radio" name="rating" id="star2" value="2">
+                            <label for="star2" title="2 stars">★</label>
+                            <input type="radio" name="rating" id="star1" value="1">
+                            <label for="star1" title="1 star">★</label>
+                        </div>
+
+                        <div class="rating-text text-center mb-3">
+                            <span id="ratingText" class="fw-bold text-primary"></span>
+                        </div>
+
+                        <!-- Optional Feedback -->
+                        <div class="mb-3">
+                            <label for="feedback" class="form-label text-start d-block">
+                                <small>Additional comments (optional):</small>
+                            </label>
+                            <textarea name="feedback" id="feedback" class="form-control feedback-textarea"
+                                      placeholder="Tell us more about your experience..."></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 pt-0">
+                        <a asp-action="Index" asp-controller="Home" class="btn btn-outline-secondary">Skip</a>
+                        <button type="submit" class="btn btn-primary">Submit Rating</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
 
-<!-- Used Claude to help provide scripts to highlight inputs, clear invalid input on type, show valid input, and validate files -->
 @section Scripts {
     <script>
+        // Used Claude to help write JavaScript for frontend, real-time validation and form submission checks
         $(function() {
             var currentError = null;
             var fields = ['Address', 'Suburb', 'Category', 'Description'];
@@ -114,7 +213,6 @@
                 currentError = field;
             }
 
-            // Real-time validation
             $('input:not(#Files), textarea, select').on('input change', function() {
                 var $f = $(this), name = $f.attr('name'), val = $f.val();
 
@@ -127,8 +225,7 @@
                 }
             });
 
-            // Form submission
-            $('form').on('submit', function(e) {
+            $('form[action*="SubmitIssueReport"]').on('submit', function(e) {
                 var firstEmpty = fields.find(f => !$('[name="' + f + '"]').val()?.trim());
                 if (firstEmpty) {
                     e.preventDefault();
@@ -138,7 +235,7 @@
             });
         });
 
-        // File validation 
+        // Used Claude to help write JavaScript for file input validation
         $('#Files').on('change', function () {
             const allowedTypes = ['image/jpeg', 'image/png', 'text/plain', 'application/pdf',  'application/msword',
             'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
@@ -164,5 +261,44 @@
             }
         });
 
+        // Used Claude to help write JavaScript for correctly displaying the rating modal and handling star rating interactions
+         $(document).ready(function () {
+
+            @if (TempData["ShowRatingModal"] != null)
+            {
+                    <text>
+                    setTimeout(() => $('#ratingModal').modal('show'), 1000);
+                    </text>
+            }
+
+            $('input[name="rating"]').change(function() {
+                $('#ratingText').text(ratingTexts[$(this).val()]);
+            });
+
+            // Dismiss success message
+            setTimeout(() => $('.alert-success').alert('close'), 1000);
+        });
+
+        $('form[action*="SubmitRating"]').on('submit', function(e) {
+            const rating = $('input[name="rating"]:checked').val();
+
+            if (!rating) {
+                e.preventDefault();
+                $('#ratingText').text('Please select a rating').removeClass('text-primary').addClass('text-danger');
+            }
+        });
+
+        $('input[name="rating"]').on('change', function() {
+            const rating = $(this).val();
+            const ratingTexts = {
+                1: "Poor - We'll do better",
+                2: "Fair - Room for improvement",
+                3: "Good - Thanks for the feedback",
+                4: "Very Good - We're glad to help!",
+                5: "Excellent - You made our day!"
+            };
+
+            $('#ratingText').text(ratingTexts[rating]).removeClass('text-danger').addClass('text-primary');
+        });
     </script>
 }

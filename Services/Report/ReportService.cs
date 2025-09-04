@@ -1,6 +1,5 @@
 ﻿using ST10296167_PROG7312_POE.Data;
 using ST10296167_PROG7312_POE.Models;
-using System.ComponentModel;
 
 namespace ST10296167_PROG7312_POE.Services.Report
 {
@@ -76,8 +75,25 @@ namespace ST10296167_PROG7312_POE.Services.Report
             return fullPath;
         }
 
-    
+        // Save submitted user feedback to the datastore in a Feedback object
+        public void SaveFeedback(int rating, string? feedback)
+        {
+            Feedback userFeedback = new Feedback
+            {
+                Rating = rating,
+                OptionalFeedback = feedback
+            };
+            _dataStore.UserFeedback.AddLast(userFeedback);
+            Console.WriteLine($"User Rating: {rating} stars");
+            if (!string.IsNullOrEmpty(feedback))
+            {
+                Console.WriteLine($"User Feedback: {feedback}");
+            }
+            Console.WriteLine("Feedback saved.");
+        }
 
+
+        // TESTING 
         public void testStore()
         {
             foreach (var repIssue in _dataStore.ReportedIssues)
