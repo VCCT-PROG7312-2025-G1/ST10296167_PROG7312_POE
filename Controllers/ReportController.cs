@@ -76,7 +76,7 @@ namespace ST10296167_PROG7312_POE.Controllers
             {   
                 _reportService.SaveFeedback(rating, feedback);
 
-                TempData["RatingSuccess"] = "Thank you for your feedback!";
+                TempData["RatingSuccess"] = "Feedback received";
                 return RedirectToAction("ReportMenu", "Report");
             }
             catch (Exception ex)

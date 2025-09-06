@@ -73,6 +73,16 @@
         </div>
     }
 
+    @if (TempData["RatingError"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show error-message position-fixed"
+             style="top: 80px; right: 20px; z-index: 1100; max-width: 400px;">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <strong>Error!</strong> @TempData["RatingError"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
     <!-- Back Button -->
     <a asp-action="ReportMenu" asp-controller="Report"
        class="btn btn-secondary position-absolute"

@@ -3,6 +3,16 @@
 </head>
 
 <body>
+    <!-- Feedback Thank You Message -->
+    @if (TempData["RatingSuccess"] != null)
+    {
+        <div class="alert alert-info alert-dismissible fade show success-message position-fixed"
+             style="top: 80px; right: 20px; z-index: 1100; max-width: 400px;">
+            <strong>Thank You!</strong> @TempData["RatingSuccess"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
     <!-- Back Button -->
     <a asp-action="Index" asp-controller="Home"
        class="btn btn-secondary position-absolute"
@@ -28,3 +38,14 @@
         </div>
     </div>
 </body>
+
+@section Scripts {
+<script>
+    // Auto-dismiss success message after 3 seconds
+    $(document).ready(function () {
+        setTimeout(function () {
+            $('.success-message').alert('close');
+        }, 3000);
+    });
+</script>
+}
