@@ -6,6 +6,21 @@
             display: block !important;
         }
 
+        h2 {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        .form-container {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.06);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            transition: box-shadow 0.3s ease;
+        }
+
         .star-rating {
             direction: ltr;
             display: inline-flex;
@@ -61,87 +76,94 @@
     <!-- Back Button -->
     <a asp-action="ReportMenu" asp-controller="Report"
        class="btn btn-secondary position-absolute"
-       style="top: 70px; left: 10px; z-index: 1000;">
+       style="top: 100px; left: 10px; z-index: 1000;">
         &larr; Back
     </a>
 
     <div class="text-center mt-5">
-        <h1>Report Issue</h1>
+        <h2>Report Issue</h2>
 
         <div class="mx-auto" style="max-width: 800px;">
             <hr />
-            <form asp-action="SubmitIssueReport" method="post" enctype="multipart/form-data">
-                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-                <div class="row">
-                    <!-- Left Section -->
-                    <div class="col-md-6">
+            <div class="form-container">
+                <form asp-action="SubmitIssueReport" method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-                        <!-- Location -->
-                        <label class="form-label fw-bold d-block text-start">Location</label>
+                    <div class="row">
+                        <!-- Left Section -->
+                        <div class="col-md-6">
 
-                        <div class="form-floating mb-3">
-                            <input asp-for="Address"
-                                   class="form-control @(ViewData.ModelState["Address"]?.Errors.Count > 0 ? "is-invalid" : "")"
-                                   placeholder="Street Address" />
-                            <label asp-for="Address">Street Address</label>
-                            <span asp-validation-for="Address" class="invalid-feedback"></span>
-                        </div>
+                            <!-- Location -->
+                            <label class="form-label fw-bold d-block text-start">Location</label>
+
+                            <div class="form-floating mb-3">
+                                <input asp-for="Address"
+                                       class="form-control @(ViewData.ModelState["Address"]?.Errors.Count > 0 ? "is-invalid" : "")"
+                                       placeholder="Street Address" />
+                                <label asp-for="Address">Street Address</label>
+                                <span asp-validation-for="Address" class="invalid-feedback"></span>
+                            </div>
                         
-                        <div class="form-floating mb-3">
-                            <input asp-for="Suburb"
-                                   class="form-control @(ViewData.ModelState["Suburb"]?.Errors.Count > 0 ? "is-invalid" : "")"
-                                   placeholder="Suburb" />
-                            <label asp-for="Suburb">Suburb</label>
-                            <span asp-validation-for="Suburb" class="invalid-feedback"></span>
+                            <div class="form-floating mb-3">
+                                <input asp-for="Suburb"
+                                       class="form-control @(ViewData.ModelState["Suburb"]?.Errors.Count > 0 ? "is-invalid" : "")"
+                                       placeholder="Suburb" />
+                                <label asp-for="Suburb">Suburb</label>
+                                <span asp-validation-for="Suburb" class="invalid-feedback"></span>
+                            </div>
+
+                            <!-- Category -->
+                            <label class="form-label fw-bold d-block text-start">Category</label>
+                            <select asp-for="Category"
+                                    class="form-select @(ViewData.ModelState["Category"]?.Errors.Count > 0 ? "is-invalid" : "")">
+                                <option hidden disabled selected value="">Select Category</option>
+                                <option value="Water">Water</option>
+                                <option value="Electricity">Electricity</option>
+                                <option value="Road Damage">Road Damage</option>
+                                <option value="Waste Management">Waste Management</option>
+                                <option value="Utilities">Utilities</option>
+                                <option value="Environment">Environment</option>
+                                <option value="Public Transport">Public Transport</option>
+                                <option value="Public Safety">Public Safety</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <span asp-validation-for="Category" class="invalid-feedback"></span>
                         </div>
 
-                        <!-- Category -->
-                        <label class="form-label fw-bold d-block text-start">Category</label>
-                        <select asp-for="Category"
-                                class="form-select @(ViewData.ModelState["Category"]?.Errors.Count > 0 ? "is-invalid" : "")">
-                            <option hidden disabled selected value="">Select Category</option>
-                            <option value="Water Leak">Water Leak</option>
-                            <option value="Electricity">Electricity</option>
-                            <option value="Road Damage">Road Damage</option>
-                            <option value="Waste Management">Waste Management</option>
-                            <option value="Other">Other</option>
-                        </select>
-                        <span asp-validation-for="Category" class="invalid-feedback"></span>
-                    </div>
+                        <!-- Right Section -->
+                        <div class="col-md-6">
 
-                    <!-- Right Section -->
-                    <div class="col-md-6">
+                            <!-- Description -->
+                            <label class="form-label fw-bold d-block text-start">Description</label>
 
-                        <!-- Description -->
-                        <label class="form-label fw-bold d-block text-start">Description</label>
+                            <div class="form-floating mb-3" style="height: 133px;">
+                                <textarea asp-for="Description"
+                                          class="form-control @(ViewData.ModelState["Description"]?.Errors.Count > 0 ? "is-invalid" : "")"
+                                          placeholder="Issue Description" style="height: 100%;"></textarea>
+                                <label asp-for="Description">Description</label>
+                                <span asp-validation-for="Description" class="invalid-feedback"></span>
+                            </div>
 
-                        <div class="form-floating mb-3" style="height: 133px;">
-                            <textarea asp-for="Description"
-                                      class="form-control @(ViewData.ModelState["Description"]?.Errors.Count > 0 ? "is-invalid" : "")"
-                                      placeholder="Issue Description" style="height: 100%;"></textarea>
-                            <label asp-for="Description">Description</label>
-                            <span asp-validation-for="Description" class="invalid-feedback"></span>
-                        </div>
+                            <!-- Upload Files -->
+                            <label for="Files" class="form-label fw-bold d-block text-start">Upload Files</label>
 
-                        <!-- Upload Files -->
-                        <label for="Files" class="form-label fw-bold d-block text-start">Upload Files</label>
-
-                        <div class="mb-3">
-                            <input type="file" id="Files" name="Files" class="form-control" multiple
-                            accept=".png,.jpg,.jpeg,.txt,.pdf,.doc,.docx"/>
-                            <div class="text-danger">
-                                <span asp-validation-for="Files" class="invalid-feedback"></span>
+                            <div class="mb-3">
+                                <input type="file" id="Files" name="Files" class="form-control" multiple
+                                accept=".png,.jpg,.jpeg,.txt,.pdf,.doc,.docx"/>
+                                <div class="text-danger">
+                                    <span asp-validation-for="Files" class="invalid-feedback"></span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Submit -->
-                <div class="d-flex justify-content-center mt-4">
-                    <button type="submit" class="btn btn-success w-50" style="height: 45px;">Submit</button>
-                </div>
-            </form>
+                    <!-- Submit -->
+                    <div class="d-flex justify-content-center mt-4">
+                        <button type="submit" class="btn btn-success w-50" style="height: 45px;">Submit</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -152,8 +174,8 @@
                 <form asp-action="SubmitRating" asp-controller="Report" method="post">
                     @Html.AntiForgeryToken() 
                     <div class="modal-header border-0 pb-0">
-                        <h5 class="modal-title mx-auto" id="ratingModalLabel">
-                            <i class="fas fa-thumbs-up text-success me-2"></i>Rate Our Service
+                        <h5 class="modal-title mx-auto" id="ratingModalLabel" style="font-weight: bold">
+                            Rate Our Service
                         </h5>
                     </div>
                     <div class="modal-body text-center px-4">

@@ -20,3 +20,25 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.navbar .nav-link {
+    transition: color 0.3s ease;
+}
+
+    .navbar .nav-link:hover {
+        color: black !important;
+    }
+
+.navbar .nav-item span.nav-link:hover {
+    color: inherit !important;
+}
+
+.navbar .nav-item button.nav-link:hover {
+    color: inherit !important;
+}
+
+h1 {
+    font-size: 3.5rem;
+    font-weight: bolder;
+    margin-top: 0px;
+}
