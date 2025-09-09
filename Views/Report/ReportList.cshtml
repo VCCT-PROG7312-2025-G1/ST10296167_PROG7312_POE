@@ -4,7 +4,8 @@
 
 </head>
 
-<body>
+<body data-view-file-url="@Url.Action("ViewFile", "Report")"
+      data-download-file-url="@Url.Action("DownloadFile", "Report")">
     <!-- Back Button -->
     <a asp-action="ReportMenu" asp-controller="Report"
        class="btn btn-secondary position-absolute"
@@ -13,7 +14,7 @@
     </a>
 
     <!-- Header -->
-    <div class="container mt-4">
+    <div class="container mt-4" style="max-width: 95%; margin-left: auto; margin-right: auto;">
         <div class="row">
             <div class="col-12">
                 <div class="card border-dark mb-4">
@@ -85,7 +86,7 @@
                                 <!-- Progress -->
                                  <div class="mb-3">
                                     <h6 class="text-muted mb-1">
-                                        Progress
+                                        Status
                                     </h6>
                                     <p class="mb-0" style="color: darkorange">Processing</p>
                                 </div>
@@ -171,25 +172,5 @@
 </body>
 
 @section Scripts {
-<script>
-    // Used Claude to help write the JavaScript to display images in a modal 
-    function viewImage(fileId) {
-        const imageUrl = '@Url.Action("ViewFile", "Report")' + '?fileId=' + fileId;
-        const downloadUrl = '@Url.Action("DownloadFile", "Report")' + '?fileId=' + fileId;
-
-        document.getElementById('modalImage').src = imageUrl;
-        document.getElementById('downloadImageBtn').href = downloadUrl;
-
-        const modal = new bootstrap.Modal(document.getElementById('imageModal'));
-        modal.show();
-    }
-
-    setTimeout(function() {
-        const alertElement = document.querySelector('.alert');
-        if (alertElement) {
-            const bsAlert = bootstrap.Alert.getOrCreateInstance(alertElement);
-            bsAlert.close();
-        }
-    }, 1500);
-</script>
+    <script src="~/js/report-list.js"></script>
 }

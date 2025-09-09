@@ -1,0 +1,57 @@
+﻿.invalid-feedback[data-valmsg-for="Files"] {
+    display: block !important;
+}
+
+h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.form-container {
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.06);
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    transition: box-shadow 0.3s ease;
+}
+
+.star-rating {
+    direction: ltr;
+    display: inline-flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    gap: 5px;
+}
+
+.star-rating input {
+    display: none;
+}
+
+.star-rating label {
+    cursor: pointer;
+    font-size: 2rem;
+    color: #ddd;
+    transition: all 0.3s ease;
+}
+
+.star-rating label:hover,
+.star-rating label:hover ~ label,
+.star-rating input:checked ~ label {
+    color: #ffd700;
+    transform: scale(1.1);
+}
+
+.star-rating label:hover {
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+}
+
+.feedback-textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.success-message {
+    animation: slideInFromTop 0.5s ease-out;
+}

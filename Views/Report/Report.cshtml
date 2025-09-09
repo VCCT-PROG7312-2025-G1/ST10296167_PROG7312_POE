@@ -1,66 +1,7 @@
 ﻿@model ST10296167_PROG7312_POE.Models.Issue
 
 <head>
-    <style>
-        .invalid-feedback[data-valmsg-for="Files"] {
-            display: block !important;
-        }
-
-        h2 {
-            font-size: 2.5rem;
-            font-weight: bold;
-        }
-
-        .form-container {
-            background: #ffffff;
-            border: 1px solid #e0e0e0;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.06);
-            padding: 2.5rem;
-            margin-bottom: 2rem;
-            transition: box-shadow 0.3s ease;
-        }
-
-        .star-rating {
-            direction: ltr;
-            display: inline-flex;
-            flex-direction: row-reverse;
-            justify-content: center;
-            gap: 5px;
-        }
-
-            .star-rating input {
-                display: none;
-            }
-
-            .star-rating label {
-                cursor: pointer;
-                font-size: 2rem;
-                color: #ddd;
-                transition: all 0.3s ease;
-            }
-
-                .star-rating label:hover,
-                .star-rating label:hover ~ label,
-                .star-rating input:checked ~ label {
-                    color: #ffd700;
-                    transform: scale(1.1);
-                }
-
-                .star-rating label:hover {
-                    text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
-                }
-
-        .feedback-textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        .success-message {
-            animation: slideInFromTop 0.5s ease-out;
-        }
-
-    </style>
+    <link rel="stylesheet" href="~/css/report-issues.css"/>
 </head>
 
 <body>
@@ -110,7 +51,7 @@
                             <div class="form-floating mb-3">
                                 <input asp-for="Address"
                                        class="form-control @(ViewData.ModelState["Address"]?.Errors.Count > 0 ? "is-invalid" : "")"
-                                       placeholder="Street Address" />
+                                       placeholder="Road Address" />
                                 <label asp-for="Address">Street Address</label>
                                 <span asp-validation-for="Address" class="invalid-feedback"></span>
                             </div>
@@ -229,108 +170,17 @@
 </body>
 
 @section Scripts {
+    <script src="~/js/report-issues.js"></script>
+
     <script>
-        // Used Claude to help write JavaScript for frontend, real-time validation and form submission checks
-        $(function() {
-            var currentError = null;
-            var fields = ['Address', 'Suburb', 'Category', 'Description'];
-
-            function showError(field) {
-                $('.is-invalid, .is-valid').removeClass('is-invalid is-valid');
-                $('.invalid-feedback').text('');
-
-                var $f = $('[name="' + field + '"]');
-                $f.addClass('is-invalid');
-                $f.siblings('.invalid-feedback').text($f.data('val-required'));
-                currentError = field;
-            }
-
-            $('input:not(#Files), textarea, select').on('input change', function() {
-                var $f = $(this), name = $f.attr('name'), val = $f.val();
-
-                if (currentError === name && val?.trim()) {
-                    $f.removeClass('is-invalid').addClass('is-valid');
-                    $f.siblings('.invalid-feedback').text('');
-                    currentError = null;
-                } else if (val?.trim() && !currentError) {
-                    $f.addClass('is-valid');
-                }
-            });
-
-            $('form[action*="SubmitIssueReport"]').on('submit', function(e) {
-                var firstEmpty = fields.find(f => !$('[name="' + f + '"]').val()?.trim());
-                if (firstEmpty) {
-                    e.preventDefault();
-                    showError(firstEmpty);
-                    $('[name="' + firstEmpty + '"]').focus();
-                }
-            });
-        });
-
-        // Used Claude to help write JavaScript for file input validation
-        $('#Files').on('change', function () {
-            const allowedTypes = ['image/jpeg', 'image/png', 'text/plain', 'application/pdf',  'application/msword',
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-            const maxSize = 5 * 1024 * 1024; // 5 MB
-            const $validationSpan = $('.invalid-feedback[data-valmsg-for="Files"]');
-
-            $(this).removeClass('is-invalid is-valid'); 
-            $validationSpan.text("");
-
-            for (let file of this.files) {
-                if (!allowedTypes.includes(file.type)) {
-                    $validationSpan.text(`File type not allowed: ${file.name}`);
-                    $(this).addClass('is-invalid');
-                    this.value = "";
-                    return;
-                }
-                if (file.size > maxSize) {
-                    $validationSpan.text(`File too large (max 5MB): ${file.name}`);
-                    $(this).addClass('is-invalid');
-                    this.value = "";
-                    return;
-                }
-            }
-        });
-
-        // Used Claude to help write JavaScript for correctly displaying the rating modal and handling star rating interactions
-         $(document).ready(function () {
-
-            @if (TempData["ShowRatingModal"] != null)
-            {
-                    <text>
+        @if (TempData["ShowRatingModal"] != null)
+        {
+                <text>
                     setTimeout(() => $('#ratingModal').modal('show'), 740);
-                    </text>
-            }
+                </text>
+        }
 
-            $('input[name="rating"]').change(function() {
-                $('#ratingText').text(ratingTexts[$(this).val()]);
-            });
-
-            // Dismiss success message
-            setTimeout(() => $('.alert-success').alert('close'), 750);
-        });
-
-        $('form[action*="SubmitRating"]').on('submit', function(e) {
-            const rating = $('input[name="rating"]:checked').val();
-
-            if (!rating) {
-                e.preventDefault();
-                $('#ratingText').text('Please select a rating').removeClass('text-primary').addClass('text-danger');
-            }
-        });
-
-        $('input[name="rating"]').on('change', function() {
-            const rating = $(this).val();
-            const ratingTexts = {
-                1: "Poor - We'll do better",
-                2: "Fair - Room for improvement",
-                3: "Good - Thanks for the feedback",
-                4: "Very Good - We're glad to help!",
-                5: "Excellent - You made our day!"
-            };
-
-            $('#ratingText').text(ratingTexts[rating]).removeClass('text-danger').addClass('text-primary');
-        });
+        // Dismiss success messages
+        setTimeout(() => $('.alert-success').alert('close'), 750);
     </script>
 }
