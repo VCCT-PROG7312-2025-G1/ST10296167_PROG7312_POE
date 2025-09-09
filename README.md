@@ -48,7 +48,7 @@ Selecting *Add Issue* will prompt the user to fill in an issue report form requi
 
 Users can submit the form once all required fields are filled in by clicking the **Submit** button. A confirmation message will be displayed upon successful submission.
 
-In order to improve user enagement, users will then be prompted to rate their experience submitting the report through an in-app survey that utilizes a user-friendly **star rating** system in combination with an optional feedback option.
+In order to improve user enagement, the user engagment strategy of in-app feedback will be used to allow users to rate their experience submitting the report through an in-app survey that utilizes a user-friendly **star rating** system in combination with an optional feedback option.
 
 #### Viewing Submitted Issues
 Selecting *Submitted Issues* will display a list of all issues that have been reported by the user. Each issue entry will show the following details:
