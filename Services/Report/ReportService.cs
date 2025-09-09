@@ -29,19 +29,26 @@ namespace ST10296167_PROG7312_POE.Services.Report
                 {
                     foreach (var file in files)
                     {
-                        string filePath = await SaveFileToDisk(file);
-                        Console.WriteLine($"File saved: {filePath}");
-
-                        UploadedFile uploadedFile = new UploadedFile
+                        try
                         {
-                            ID = _dataStore.GenerateFileID(),
-                            FileName = file.FileName,
-                            MimeType = file.ContentType,
-                            Size = file.Length,
-                            FilePath = filePath,
-                            IssueID = issue.ID,
-                        };
-                        issue.Files?.AddLast(uploadedFile);
+                            string filePath = await SaveFileToDisk(file);
+                            Console.WriteLine($"File saved: {filePath}");
+
+                            UploadedFile uploadedFile = new UploadedFile
+                            {
+                                ID = _dataStore.GenerateFileID(),
+                                FileName = file.FileName,
+                                MimeType = file.ContentType,
+                                Size = file.Length,
+                                FilePath = filePath,
+                                IssueID = issue.ID,
+                            };
+                            issue.Files?.AddLast(uploadedFile);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Error saving file '{file.FileName}': {ex.Message}");
+                        }
                     }
                 }
 
@@ -63,18 +70,26 @@ namespace ST10296167_PROG7312_POE.Services.Report
         // Save a uploaded file to a temporary directory and return the file path
         public async Task<string> SaveFileToDisk(IFormFile file)
         {
-            string runtimeFolder = Path.Combine(Path.GetTempPath(), "MyAppFiles");
-            Directory.CreateDirectory(runtimeFolder);
-
-            string uniqueFileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
-            string fullPath = Path.Combine(runtimeFolder, uniqueFileName);
-
-            using (var stream = new FileStream(fullPath, FileMode.Create))
+            try
             {
-                await file.CopyToAsync(stream);
-            }
+                string runtimeFolder = Path.Combine(Path.GetTempPath(), "MyAppFiles");
+                Directory.CreateDirectory(runtimeFolder);
 
-            return fullPath;
+                string uniqueFileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+                string fullPath = Path.Combine(runtimeFolder, uniqueFileName);
+
+                using (var stream = new FileStream(fullPath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
+                return fullPath;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving file to disk: {ex.Message}");
+                throw;
+            }
         }
 
         // Save submitted user feedback to the datastore in a Feedback object
