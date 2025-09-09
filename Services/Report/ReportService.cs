@@ -23,9 +23,7 @@ namespace ST10296167_PROG7312_POE.Services.Report
             try
             {
                 issue.ID = _dataStore.GenerateIssueID();
-                Console.WriteLine(issue.ID);
                 issue.Location = $"{issue.Address}, {issue.Suburb}";
-                Console.WriteLine(issue.Location);
 
                 if(files != null)
                 {
@@ -49,7 +47,6 @@ namespace ST10296167_PROG7312_POE.Services.Report
 
                 _dataStore.ReportedIssues.Add(issue.ID, issue);
                 Console.WriteLine("SAVED ISSUE");
-                testStore();
                 return true;
             }
             catch
@@ -90,6 +87,7 @@ namespace ST10296167_PROG7312_POE.Services.Report
             };
             _dataStore.UserFeedback.AddLast(userFeedback);
             Console.WriteLine($"User Rating: {rating} stars");
+
             if (!string.IsNullOrEmpty(feedback))
             {
                 Console.WriteLine($"User Feedback: {feedback}");
@@ -115,17 +113,6 @@ namespace ST10296167_PROG7312_POE.Services.Report
             }
             return null;
         }
-
-
-        // TESTING 
-        public void testStore()
-        {
-            foreach (var repIssue in _dataStore.ReportedIssues)
-            {
-                Console.WriteLine($"ID: {repIssue.Value.ID}, Location: {repIssue.Value.Location}, Description: {repIssue.Value.Description}");
-            }
-        }
-
         //------------------------------------------------------------------------------------------------------------------------------------------//
     }
 }
