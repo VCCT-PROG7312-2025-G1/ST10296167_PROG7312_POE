@@ -28,3 +28,4 @@ namespace ST10296167_PROG7312_POE.Models
         public LinkedList<UploadedFile>? Files{ get; set; } = new LinkedList<UploadedFile>();
     }
 }
+//--------------------------------------------------------X END OF FILE X-------------------------------------------------------------------//

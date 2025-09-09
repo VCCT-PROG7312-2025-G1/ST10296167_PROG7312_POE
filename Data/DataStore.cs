@@ -110,7 +110,6 @@ namespace ST10296167_PROG7312_POE.Data
             }
         };
 
-                // Define sample files from wwwroot (these need to exist in your project)
                 var sampleFiles = new List<(string fileName, string wwwrootPath, string mimeType)>
         {
             ("pothole1.jpg", "sample/images/pothole1.jpg", "image/jpeg"),
@@ -121,7 +120,6 @@ namespace ST10296167_PROG7312_POE.Data
             ("playground.jpg", "sample/images/playground.jpeg", "image/jpeg"),
         };
 
-                // Copy files from wwwroot to temp directory and create UploadedFile objects
                 var copiedFiles = new List<UploadedFile>();
 
                 foreach (var sampleFile in sampleFiles)
@@ -188,7 +186,6 @@ namespace ST10296167_PROG7312_POE.Data
                     return null;
                 }
 
-                // Create unique filename for temp directory
                 string uniqueFileName = Guid.NewGuid() + Path.GetExtension(fileName);
                 string destinationPath = Path.Combine(_uploadFolder, uniqueFileName);
 
