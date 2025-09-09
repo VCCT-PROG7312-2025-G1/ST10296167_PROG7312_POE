@@ -5,7 +5,7 @@
 [https://github.com/VCCT-PROG7312-2025-G1/ST10296167_PROG7312_POE.git](https://github.com/VCCT-PROG7312-2025-G1/ST10296167_PROG7312_POE.git)
 
 ### *YouTube Demo Video:*
-*Link*
+[https://youtu.be/iX2-10jpqV0?si=o3jmx8cb9076vzQd](https://youtu.be/iX2-10jpqV0?si=o3jmx8cb9076vzQd)
 ****
 ## Setting Up and Running the Application
 ### Setting up the Development Environment
