@@ -1,10 +1,12 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ST10296167_PROG7312_POE.Models
 {
     public class Issue
     {
+        [Key]
         public int ID { get; set; }
 
         [Required(ErrorMessage = "Please enter the address of the issue")]
@@ -24,8 +26,14 @@ namespace ST10296167_PROG7312_POE.Models
         [MaxLength(500)]
         public string Description { get; set; }
 
-        // Navigation property
-        public LinkedList<UploadedFile>? Files{ get; set; } = new LinkedList<UploadedFile>();
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        // EF Core navigation property
+        public virtual ICollection<UploadedFile> DbFiles { get; set; } = new List<UploadedFile>();
+
+        // In-memory data structure (not mapped to database)
+        [NotMapped]
+        public LinkedList<UploadedFile>? Files { get; set; } = new LinkedList<UploadedFile>();
     }
 }
 //--------------------------------------------------------X END OF FILE X-------------------------------------------------------------------//

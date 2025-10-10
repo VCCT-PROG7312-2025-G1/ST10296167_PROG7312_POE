@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ST10296167_PROG7312_POE.Models;
 
@@ -7,14 +8,22 @@ namespace ST10296167_PROG7312_POE.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly SignInManager<User> _signInManager;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, SignInManager<User> signInManager)
         {
             _logger = logger;
+            _signInManager = signInManager;
         }
 
         public IActionResult Index()
         {
+            // If user is logged in, redirect them to user dashboard
+            if (_signInManager.IsSignedIn(User))
+            {
+                return RedirectToAction("Dashboard", "User");
+            }
+            
             return View();
         }
 

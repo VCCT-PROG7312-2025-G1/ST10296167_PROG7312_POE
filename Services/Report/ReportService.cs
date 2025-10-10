@@ -1,17 +1,23 @@
 ﻿using ST10296167_PROG7312_POE.Data;
 using ST10296167_PROG7312_POE.Models;
+using ST10296167_PROG7312_POE.Repository.Issue;
+using ST10296167_PROG7312_POE.Repository.Feedback;
 
 namespace ST10296167_PROG7312_POE.Services.Report
 {
     public class ReportService : IReportService
     {
         private readonly DataStore _dataStore;
+        private readonly IIssueRepository _issueRepository;
+        private readonly IFeedbackRepository _feedbackRepository;
 
-        // Constrcutor
+        // Constructor
         //------------------------------------------------------------------------------------------------------------------------------------------//
-        public ReportService(DataStore dataStore)
+        public ReportService(DataStore dataStore, IIssueRepository issueRepository, IFeedbackRepository feedbackRepository)
         {
             _dataStore = dataStore;
+            _issueRepository = issueRepository;
+            _feedbackRepository = feedbackRepository;
         }
         //------------------------------------------------------------------------------------------------------------------------------------------//
 
@@ -22,8 +28,12 @@ namespace ST10296167_PROG7312_POE.Services.Report
         {
             try
             {
-                issue.ID = _dataStore.GenerateIssueID();
+                // Set location and save to database first
                 issue.Location = $"{issue.Address}, {issue.Suburb}";
+                var savedIssue = await _issueRepository.AddIssueAsync(issue);
+                
+                // Update the issue with the database-generated ID
+                issue.ID = savedIssue.ID;
 
                 if(files != null)
                 {
@@ -36,13 +46,18 @@ namespace ST10296167_PROG7312_POE.Services.Report
 
                             UploadedFile uploadedFile = new UploadedFile
                             {
-                                ID = _dataStore.GenerateFileID(),
                                 FileName = file.FileName,
                                 MimeType = file.ContentType,
                                 Size = file.Length,
                                 FilePath = filePath,
                                 IssueID = issue.ID,
                             };
+                            
+                            // Save file to database
+                            var savedFile = await _issueRepository.AddFileAsync(uploadedFile);
+                            uploadedFile.ID = savedFile.ID;
+                            
+                            // Add to in-memory data structure
                             issue.Files?.AddLast(uploadedFile);
                         }
                         catch (Exception ex)
@@ -52,6 +67,7 @@ namespace ST10296167_PROG7312_POE.Services.Report
                     }
                 }
 
+                // Add to in-memory data structure
                 _dataStore.ReportedIssues.Add(issue.ID, issue);
                 Console.WriteLine("SAVED ISSUE");
                 return true;
@@ -67,16 +83,16 @@ namespace ST10296167_PROG7312_POE.Services.Report
             return _dataStore.ReportedIssues;
         }
 
-        // Save a uploaded file to a temporary directory and return the file path
+        // Save a uploaded file to the uploads directory and return the file path
         public async Task<string> SaveFileToDisk(IFormFile file)
         {
             try
             {
-                string runtimeFolder = Path.Combine(Path.GetTempPath(), "MyAppFiles");
-                Directory.CreateDirectory(runtimeFolder);
+                string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+                Directory.CreateDirectory(uploadsFolder);
 
                 string uniqueFileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
-                string fullPath = Path.Combine(runtimeFolder, uniqueFileName);
+                string fullPath = Path.Combine(uploadsFolder, uniqueFileName);
 
                 using (var stream = new FileStream(fullPath, FileMode.Create))
                 {
@@ -93,13 +109,19 @@ namespace ST10296167_PROG7312_POE.Services.Report
         }
 
         // Save submitted user feedback to the datastore in a Feedback object
-        public void SaveFeedback(int rating, string? feedback)
+        public async Task SaveFeedback(int rating, string? feedback)
         {
             Feedback userFeedback = new Feedback
             {
                 Rating = rating,
                 OptionalFeedback = feedback
             };
+            
+            // Save to database first
+            var savedFeedback = await _feedbackRepository.AddFeedbackAsync(userFeedback);
+            userFeedback.ID = savedFeedback.ID;
+            
+            // Add to in-memory data structure
             _dataStore.UserFeedback.AddLast(userFeedback);
             Console.WriteLine($"User Rating: {rating} stars");
 

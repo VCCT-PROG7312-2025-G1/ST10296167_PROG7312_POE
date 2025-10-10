@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using ST10296167_PROG7312_POE.Models;
 using ST10296167_PROG7312_POE.Services.Report;
 
@@ -7,11 +8,14 @@ namespace ST10296167_PROG7312_POE.Controllers
     public class ReportController : Controller
     {
         private readonly IReportService _reportService;
+        private readonly SignInManager<User> _signInManager;
+        
         // Constructor
         //------------------------------------------------------------------------------------------------------------------------------------------//
-        public ReportController(IReportService reportService)
+        public ReportController(IReportService reportService, SignInManager<User> signInManager)
         {
             _reportService = reportService;
+            _signInManager = signInManager;
         }
         //------------------------------------------------------------------------------------------------------------------------------------------//
 
@@ -19,16 +23,34 @@ namespace ST10296167_PROG7312_POE.Controllers
         //------------------------------------------------------------------------------------------------------------------------------------------//
         public IActionResult Report()
         {
+            // If user is logged in, redirect them to user dashboard
+            if (_signInManager.IsSignedIn(User))
+            {
+                return RedirectToAction("Dashboard", "User");
+            }
+            
             return View();
         }
 
         public IActionResult ReportMenu()
         {
+            // If user is logged in, redirect them to user dashboard
+            if (_signInManager.IsSignedIn(User))
+            {
+                return RedirectToAction("Dashboard", "User");
+            }
+            
             return View();
         }
 
         public IActionResult ReportList()
         {
+            // If user is logged in, redirect them to user dashboard
+            if (_signInManager.IsSignedIn(User))
+            {
+                return RedirectToAction("Dashboard", "User");
+            }
+            
             var issues = _reportService.GetAllIssues();
             return View(issues);
         }
@@ -36,7 +58,7 @@ namespace ST10296167_PROG7312_POE.Controllers
 
         // Methods
         //------------------------------------------------------------------------------------------------------------------------------------------//
-        // Check if the user had input valid data for an issue and then add the issue to the datastore dictionary
+        // Check if the user had input valid data for an issue and then add the issue to the datastore dictionary and db
         [HttpPost]
         public async Task<IActionResult> SubmitIssueReport(Issue issue, IFormFile[]? files)
         {
@@ -61,9 +83,9 @@ namespace ST10296167_PROG7312_POE.Controllers
 
         }
 
-        // Save a user's submitted rating and feedback to the Feedback linked list in the datastore
+        // Save a user's submitted rating and feedback to the Feedback linked list and db
         [HttpPost]
-        public IActionResult SubmitRating(int rating, string? feedback)
+        public async Task<IActionResult> SubmitRating(int rating, string? feedback)
         {
             if (rating < 1 || rating > 5)
             {
@@ -74,7 +96,7 @@ namespace ST10296167_PROG7312_POE.Controllers
 
             try
             {   
-                _reportService.SaveFeedback(rating, feedback);
+                await _reportService.SaveFeedback(rating, feedback);
 
                 TempData["RatingSuccess"] = "Feedback received";
                 return RedirectToAction("ReportMenu", "Report");
@@ -88,7 +110,7 @@ namespace ST10296167_PROG7312_POE.Controllers
             }
         }
 
-        // View an image file in the browser if it still exists on disk
+        // View an image file in the browser
         public IActionResult ViewFile(int fileId)
         {
             var file = _reportService.GetFileById(fileId);
