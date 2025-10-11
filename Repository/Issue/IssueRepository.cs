@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using ST10296167_PROG7312_POE.Data;
-using ST10296167_PROG7312_POE.Models;
 using IssueModel = ST10296167_PROG7312_POE.Models.Issue;
 using UploadedFileModel = ST10296167_PROG7312_POE.Models.UploadedFile;
 

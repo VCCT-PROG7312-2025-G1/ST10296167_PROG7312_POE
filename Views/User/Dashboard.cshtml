@@ -1,3 +1,35 @@
-<p>
-    Employee Dashboard
-</p>
+<head>
+
+</head>
+
+<body>
+
+    <div class="text-center mt-5">
+        <h1>Employee Dashboard</h1>
+        <h4>Add events & announcements</h4>
+        <hr />
+
+        <div class="mt-4 d-flex flex-wrap justify-content-center gap-4">
+            <a asp-controller="EventsAndAnnouncements" asp-action="AddEvent" class="btn btn-light text-center shadow rounded p-3" style="width: 200px;">
+                <img src="~/images/add.png" alt="Report Issues" style="height: 100px;" class="mb-2 img-fluid" />
+                <div class="fw-semibold fs-6 text-dark">Add Event</div>
+            </a>
+
+            <a asp-controller="EventsAndAnnouncements" asp-action="AddAnnouncement" class="btn btn-light text-center shadow rounded p-3" style="width: 200px;">
+                <img src="~/images/add.png" alt="Events & Announcements" style="height: 100px;" class="mb-2 img-fluid" />
+                <div class="fw-semibold fs-6 text-dark">Add Announcement</div>
+            </a>
+        </div>
+    </div>
+</body>
+
+@section Scripts {
+    <script>
+        // Auto-dismiss success message after 3 seconds
+        $(document).ready(function () {
+            setTimeout(function () {
+                $('.success-message').alert('close');
+            }, 3000);
+        });
+    </script>
+}

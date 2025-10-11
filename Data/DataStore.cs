@@ -9,6 +9,9 @@ namespace ST10296167_PROG7312_POE.Data
         private int nextFileId = 1;
         public Dictionary<int, Issue> ReportedIssues { get; set; } = new Dictionary<int, Issue>();
         public LinkedList<Feedback> UserFeedback { get; set; } = new LinkedList<Feedback>();
+        public SortedDictionary<DateTime, List<Event>> EventsByDate { get; set; } = new SortedDictionary<DateTime, List<Event>>();
+        public HashSet<string> UniqueCategories { get; set; } = new HashSet<string>();
+        public Stack<Announcement> RecentAnnouncements { get; set; } = new Stack<Announcement>();
 
         // Constructor
         //------------------------------------------------------------------------------------------------------------------------------------------//
@@ -30,27 +33,6 @@ namespace ST10296167_PROG7312_POE.Data
         {
             return nextFileId++;
         }
-
-        // Clear all uploaded files from the uploads directory (for seeding purposes)
-        //public void ClearUploadedFiles()
-        //{
-        //    if (Directory.Exists(_uploadFolder))
-        //    {
-        //        try
-        //        {
-        //            var files = Directory.GetFiles(_uploadFolder);
-        //            foreach (var file in files)
-        //            {
-        //                File.Delete(file);
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            Console.WriteLine($"Failed to clear upload folder: {ex.Message}");
-        //        }
-        //    }
-        //}
-
         //------------------------------------------------------------------------------------------------------------------------------------------//
     }
 }

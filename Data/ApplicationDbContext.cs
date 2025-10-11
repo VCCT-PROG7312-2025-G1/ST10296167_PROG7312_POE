@@ -12,6 +12,8 @@ namespace ST10296167_PROG7312_POE.Data
         public DbSet<Issue> Issues { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
         public DbSet<UploadedFile> UploadedFiles { get; set; }
+        public DbSet<Announcement> Announcements { get; set; }
+        public DbSet<Event> Events { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -48,6 +50,27 @@ namespace ST10296167_PROG7312_POE.Data
             {
                 entity.HasKey(e => e.ID);
                 entity.Property(e => e.Rating).IsRequired();
+                entity.Property(e => e.CreatedAt).HasDefaultValueSql("datetime('now')");
+            });
+
+            // Configure Announcement entity
+            builder.Entity<Announcement>(entity =>
+            {
+                entity.HasKey(e => e.ID);
+                entity.Property(e => e.Title).IsRequired().HasMaxLength(30);
+                entity.Property(e => e.Content).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.CreatedAt).HasDefaultValueSql("datetime('now')");
+            });
+
+            // Configure Event entity
+            builder.Entity<Event>(entity =>
+            {
+                entity.HasKey(e => e.ID);
+                entity.Property(e => e.Title).IsRequired().HasMaxLength(30);
+                entity.Property(e => e.Description).IsRequired().HasMaxLength(500);
+                entity.Property(e => e.Category).IsRequired();
+                entity.Property(e => e.Date).IsRequired();
+                entity.Property(e => e.Location).IsRequired().HasMaxLength(50);
                 entity.Property(e => e.CreatedAt).HasDefaultValueSql("datetime('now')");
             });
         }

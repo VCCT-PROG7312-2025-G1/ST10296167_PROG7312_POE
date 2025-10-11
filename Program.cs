@@ -4,6 +4,8 @@ using ST10296167_PROG7312_POE.Data;
 using ST10296167_PROG7312_POE.Models;
 using ST10296167_PROG7312_POE.Repository.Issue;
 using ST10296167_PROG7312_POE.Repository.Feedback;
+using ST10296167_PROG7312_POE.Repository.Event;
+using ST10296167_PROG7312_POE.Repository.Announcement;
 using ST10296167_PROG7312_POE.Services.Initialization;
 
 namespace ST10296167_PROG7312_POE
@@ -56,6 +58,10 @@ namespace ST10296167_PROG7312_POE
             builder.Services.AddScoped<IIssueRepository, IssueRepository>();
             builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
             builder.Services.AddScoped<DataInitializationService>();
+            builder.Services.AddScoped<Services.Event.IEventService, Services.Event.EventService>();
+            builder.Services.AddScoped<Services.Announcement.IAnnouncementService, Services.Announcement.AnnouncementService>();
+            builder.Services.AddScoped<IEventRepository, EventRepository>();
+            builder.Services.AddScoped<IAnnouncementRepository, AnnouncementRepository>();
 
             var app = builder.Build();
 
