@@ -12,6 +12,7 @@ namespace ST10296167_PROG7312_POE.Data
         public SortedDictionary<DateTime, List<Event>> EventsByDate { get; set; } = new SortedDictionary<DateTime, List<Event>>();
         public HashSet<string> UniqueCategories { get; set; } = new HashSet<string>();
         public Stack<Announcement> RecentAnnouncements { get; set; } = new Stack<Announcement>();
+        public Queue<SearchQuery> SearchHistory { get; set; } = new Queue<SearchQuery>();
 
         // Constructor
         //------------------------------------------------------------------------------------------------------------------------------------------//
@@ -24,6 +25,23 @@ namespace ST10296167_PROG7312_POE.Data
 
         // Methods
         //------------------------------------------------------------------------------------------------------------------------------------------//
+        public void LogSearch(SearchQuery search)
+        {
+            // Ensure valid timestamp
+            search.SearchTimestamp = search.SearchTimestamp == default
+                ? DateTime.UtcNow
+                : search.SearchTimestamp;
+
+            SearchHistory.Enqueue(search);
+            Console.WriteLine("Added to search to search history");
+
+            // Limit queue size
+            if(SearchHistory.Count > 10)
+            {
+                SearchHistory.Dequeue();
+            }
+        }
+
         public int GenerateIssueID()
         {
             return nextIssueId++;

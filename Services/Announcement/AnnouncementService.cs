@@ -8,13 +8,11 @@ namespace ST10296167_PROG7312_POE.Services.Announcement
     {
         private readonly DataStore _dataStore;
         private readonly IAnnouncementRepository _announcementRepository;
-        private readonly ApplicationDbContext _context;
 
         // Constructor
         //------------------------------------------------------------------------------------------------------------------------------------------//
-        public AnnouncementService(ApplicationDbContext context, IAnnouncementRepository announcementRepository, DataStore dataStore)
+        public AnnouncementService(IAnnouncementRepository announcementRepository, DataStore dataStore)
         {
-            _context = context;
             _announcementRepository = announcementRepository;
             _dataStore = dataStore;
         }
@@ -22,9 +20,13 @@ namespace ST10296167_PROG7312_POE.Services.Announcement
 
         // Methods
         //------------------------------------------------------------------------------------------------------------------------------------------//
-        public async Task<List<AnnouncementModel>> GetRecentAnnouncementsAsync(int count)
+        public Task<List<AnnouncementModel>> GetRecentAnnouncementsAsync(int count)
         {
-            throw new NotImplementedException();
+            var recentAnnouncements = _dataStore.RecentAnnouncements
+                .Take(count)
+                .ToList();
+
+            return Task.FromResult(recentAnnouncements);
         }
         public async Task<bool> AddAnnouncementAsync(AnnouncementModel announcement)
         {

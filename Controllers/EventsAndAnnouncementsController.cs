@@ -24,7 +24,7 @@ namespace ST10296167_PROG7312_POE.Controllers
 
         // Views
         //------------------------------------------------------------------------------------------------------------------------------------------//
-        public IActionResult EventsAndAnnouncements()
+        public async Task<IActionResult> EventsAndAnnouncements(string? category, DateTime? startDate, DateTime? endDate)
         {
             // If employee, redirect to dashboard
             if (_signInManager.IsSignedIn(User))
@@ -32,9 +32,20 @@ namespace ST10296167_PROG7312_POE.Controllers
                 return RedirectToAction("Dashboard", "User");
             }
 
-            return View();
+            //var viewModel = BuildViewModel().GetAwaiter().GetResult();
+            var viewModel = new EventsAnnouncementsViewModel
+            {
+                SelectedCategory = category,
+                StartDate = startDate,
+                EndDate = endDate,
+                Events = await _eventService.SearchEventsAsync(category, startDate, endDate),
+                Announcements = await _announcementService.GetRecentAnnouncementsAsync(10),
+                Categories = await _eventService.GetAllCategoriesAsync(),
+                RecommendedEvents = await _eventService.GetRecommendedEventsAsync()
+            };
+            return View(viewModel);
         }
-
+        
         public IActionResult AddEvent()
         {
             // If not employee, redirect to home
