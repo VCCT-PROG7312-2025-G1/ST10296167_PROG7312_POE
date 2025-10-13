@@ -15,6 +15,9 @@ namespace ST10296167_PROG7312_POE.Models
         [MaxLength(100)]
         public string Content { get; set; }
 
+        [Required(ErrorMessage = "Please select a category")]
+        public string Category { get; set; }
+
         public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 }

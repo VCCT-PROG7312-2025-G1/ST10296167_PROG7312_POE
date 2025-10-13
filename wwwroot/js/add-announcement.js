@@ -1,18 +1,26 @@
 $(document).ready(function () {
+  // --- Input Validation ---
   var currentError = null;
-  var fields = ["Title", "Content"];
+  var fields = ["Title", "Category", "Content"];
 
   function showError(field) {
+    // Remove all error highlights and messages
     $(".is-invalid, .is-valid").removeClass("is-invalid is-valid");
     $(".invalid-feedback").text("");
 
     var $f = $('[name="' + field + '"]');
     $f.addClass("is-invalid");
-    $f.siblings(".invalid-feedback").text($f.data("val-required"));
+    // Custom error message for category
+    if (field === "Category") {
+      $f.siblings(".invalid-feedback").text("Please select a category");
+    } else {
+      $f.siblings(".invalid-feedback").text($f.data("val-required"));
+    }
     currentError = field;
   }
 
-  $("input, textarea").on("input change", function () {
+  // Only clear error for the current field on input/change
+  $("input, textarea, select").on("input change", function () {
     var $f = $(this),
       name = $f.attr("name"),
       val = $f.val();
@@ -27,12 +35,12 @@ $(document).ready(function () {
   });
 
   $('form[action*="AddAnnouncement"]').on("submit", function (e) {
-    var firstEmpty = fields.find(
-      (f) =>
-        !$('[name="' + f + '"]')
-          .val()
-          ?.trim()
-    );
+    var firstEmpty = fields.find((f) => {
+      var $input = $('[name="' + f + '"]');
+      var val = $input.val();
+      // For select and text, check for empty string
+      return !val || !val.trim();
+    });
     if (firstEmpty) {
       e.preventDefault();
       showError(firstEmpty);

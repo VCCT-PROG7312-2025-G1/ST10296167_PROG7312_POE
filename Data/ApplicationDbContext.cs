@@ -59,6 +59,7 @@ namespace ST10296167_PROG7312_POE.Data
                 entity.HasKey(e => e.ID);
                 entity.Property(e => e.Title).IsRequired().HasMaxLength(30);
                 entity.Property(e => e.Content).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.Category).IsRequired();
                 entity.Property(e => e.CreatedAt).HasDefaultValueSql("datetime('now')");
             });
 

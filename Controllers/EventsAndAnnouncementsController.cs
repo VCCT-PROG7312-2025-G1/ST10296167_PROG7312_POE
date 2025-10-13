@@ -47,7 +47,7 @@ namespace ST10296167_PROG7312_POE.Controllers
                     StartDate = startDate,
                     EndDate = endDate,
                     Events = await _eventService.GetAllEventsAsync(),
-                    Announcements = await _announcementService.GetRecentAnnouncementsAsync(10),
+                    Announcements = await _announcementService.GetRecentAnnouncementsAsync(5),
                     Categories = await _eventService.GetAllCategoriesAsync(),
                     RecommendedEvents = await _eventService.GetCurrentRecommendationsAsync()
                 };
@@ -62,7 +62,7 @@ namespace ST10296167_PROG7312_POE.Controllers
                     StartDate = startDate,
                     EndDate = endDate,
                     Events = await _eventService.SearchEventsAsync(category, startDate, endDate),
-                    Announcements = await _announcementService.GetRecentAnnouncementsAsync(10),
+                    Announcements = await _announcementService.GetRecentAnnouncementsAsync(5),
                     Categories = await _eventService.GetAllCategoriesAsync(),
                     RecommendedEvents = await _eventService.GetRecommendedEventsAsync()
                 };
