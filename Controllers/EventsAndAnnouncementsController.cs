@@ -32,18 +32,50 @@ namespace ST10296167_PROG7312_POE.Controllers
                 return RedirectToAction("Dashboard", "User");
             }
 
-            //var viewModel = BuildViewModel().GetAwaiter().GetResult();
-            var viewModel = new EventsAnnouncementsViewModel
+            bool noSearch = string.IsNullOrEmpty(category) && !startDate.HasValue && !endDate.HasValue;
+
+            if (noSearch)
             {
-                SelectedCategory = category,
-                StartDate = startDate,
-                EndDate = endDate,
-                Events = await _eventService.SearchEventsAsync(category, startDate, endDate),
-                Announcements = await _announcementService.GetRecentAnnouncementsAsync(10),
-                Categories = await _eventService.GetAllCategoriesAsync(),
-                RecommendedEvents = await _eventService.GetRecommendedEventsAsync()
-            };
-            return View(viewModel);
+                Console.WriteLine("NO SEARCH HIT");
+                var viewModel = new EventsAnnouncementsViewModel
+                {
+                    SelectedCategory = category,
+                    StartDate = startDate,
+                    EndDate = endDate,
+                    Events = await _eventService.GetAllEventsAsync(),
+                    Announcements = await _announcementService.GetRecentAnnouncementsAsync(10),
+                    Categories = await _eventService.GetAllCategoriesAsync(),
+                    RecommendedEvents = await _eventService.GetCurrentRecommendationsAsync()
+                };
+                return View(viewModel);
+            }
+            else
+            {
+                Console.WriteLine("SEARCH HIT");
+                var viewModel = new EventsAnnouncementsViewModel
+                {
+                    SelectedCategory = category,
+                    StartDate = startDate,
+                    EndDate = endDate,
+                    Events = await _eventService.SearchEventsAsync(category, startDate, endDate),
+                    Announcements = await _announcementService.GetRecentAnnouncementsAsync(10),
+                    Categories = await _eventService.GetAllCategoriesAsync(),
+                    RecommendedEvents = await _eventService.GetRecommendedEventsAsync()
+                };
+                return View(viewModel);
+            }
+
+                //var viewModel = new EventsAnnouncementsViewModel
+                //{
+                //    SelectedCategory = category,
+                //    StartDate = startDate,
+                //    EndDate = endDate,
+                //    Events = await _eventService.SearchEventsAsync(category, startDate, endDate),
+                //    Announcements = await _announcementService.GetRecentAnnouncementsAsync(10),
+                //    Categories = await _eventService.GetAllCategoriesAsync(),
+                //    RecommendedEvents = await _eventService.GetRecommendedEventsAsync()
+                //};
+            //return View(viewModel);
         }
         
         public IActionResult AddEvent()
