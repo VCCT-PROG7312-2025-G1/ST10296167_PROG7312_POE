@@ -11,20 +11,19 @@
 </header>
 
 <div class="events-announcements-container">
-
     <!-- Announcements Section -->
     <div class="announcements-section">
         <div class="announcements-card">
             <div class="announcements-card-header">
                 <h3>
-                    <i class="fas fa-bullhorn text-primary"></i>
+                    <i class="fas fa-bullhorn"></i>
                     Recent Announcements
                 </h3>
             </div>
             <div class="announcements-card-body">
                 @if (Model.Announcements != null && Model.Announcements.Any())
                 {
-                    <div class="announcements-content">
+                    <div class="announcements-content" id="announcementsContent">
                         @foreach (var announcement in Model.Announcements.Take(10))
                         {
                             <div class="announcement-card" data-category="@announcement.Category">
@@ -35,6 +34,7 @@
                                 <h5 class="announcement-title">@announcement.Title</h5>
                                 <hr class="announcement-separator" />
                                 <p class="announcement-content">@announcement.Content</p>
+                                <a href="#" class="announcement-read-more">Read Full →</a>
                             </div>
                         }
                     </div>
@@ -50,140 +50,129 @@
         </div>
     </div>
 
-    <!-- Events List Section - 2/3 of space -->
+    <!-- Events Section -->
     <div class="events-section">
-        <div class="container-fluid">
-            <div class="events-card">
-                <div class="events-card-header">
-                    <div class="section-divider">
-                        <h3 class="section-title">
-                            <i class="fas fa-calendar-alt text-primary"></i>
-                            Upcoming Events
-                        </h3>
-                        <span class="events-count">@(Model.Events?.Count ?? 0) Events</span>
-                    </div>
+        <div class="events-card">
+            <div class="events-card-header">
+                <div class="section-divider">
+                    <h3 class="section-title">
+                        <i class="fas fa-calendar-alt"></i>
+                        Upcoming Events
+                    </h3>
+                    <span class="events-count">@(Model.Events?.Count ?? 0) Events</span>
                 </div>
+            </div>
 
-        <div class="events-card-body">
-
-            <!-- Search and Filter Section -->
-            <div class="filter-section-embedded">
-            <form method="get" id="filterForm" class="filter-form">
-                <div class="filter-group">
-                    <label for="category">Category</label>
-                    <select class="form-select" id="category" name="category">
-                        <option value="">All Categories</option>
-                        @foreach (var c in Model.Categories)
-                        {
-                            <option value="@c" selected="@(Model.SelectedCategory == c)">@c</option>
-                        }
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label for="startDate">Start Date</label>
-                    <input type="date" class="form-control" id="startDate" name="startDate"
-                            value="@(Model.StartDate?.ToString("yyyy-MM-dd") ?? "")" />
-                </div>
-
-                <div class="filter-group">
-                    <label for="endDate">End Date</label>
-                    <input type="date" class="form-control" id="endDate" name="endDate"
-                            value="@(Model.EndDate?.ToString("yyyy-MM-dd") ?? "")" />
-                </div>
-
-                <div class="filter-buttons">
-                    <button type="submit" name="search" value="true" class="btn btn-primary">Search</button>
-                    <button type="button" class="btn btn-outline-secondary" onclick="resetFilters(event)">Reset</button>
-                </div>
-            </form>
-        </div>
-
-            <!-- Recommended Events Section -->
-            @if (Model.RecommendedEvents != null && Model.RecommendedEvents.Any())
-            {
-                <div class="recommended-section-embedded">
-                    <div class="section-divider-small">
-                        <h4 class="section-title-small">
-                            <i class="fas fa-star text-success"></i>
-                            Recommended for You
-                        </h4>
-                        <small class="text-muted ms-2">Based on your interests</small>
-                    </div>
-                    
-                    <div class="events-grid recommended-events">
-                        @foreach (var recommendedEvent in Model.RecommendedEvents.Take(3))
-                        {
-                            <div class="event-card">
-                                <div class="event-card-header">
-                                    <span class="event-category">@recommendedEvent.Category</span>
-                                    <span class="event-date-badge">@recommendedEvent.Date.ToString("MMM dd")</span>
-                                </div>
-                                <h5 class="event-title">@recommendedEvent.Title</h5>
-                                <div class="event-meta">
-                                    <div class="event-meta-item">
-                                        <i class="fas fa-calendar"></i>
-                                        @recommendedEvent.Date.ToString("MMMM dd, yyyy") at @recommendedEvent.Time.ToString("HH:mm")
-                                    </div>
-                                    <div class="event-meta-item">
-                                        <i class="fas fa-map-marker-alt"></i>
-                                        @recommendedEvent.Location
-                                    </div>
-                                </div>
-                                <p class="event-description">
-                                    @(recommendedEvent.Description.Length > 80 ? recommendedEvent.Description.Substring(0, 80) + "..." : recommendedEvent.Description)
-                                </p>
-                                <button class="btn btn-outline-success event-view-btn">
-                                    <i class="fas fa-eye me-1"></i>View Details
-                                </button>
-                            </div>
-                        }
-                    </div>
-                </div>
-            } 
-             
-                    <!-- All Events Grid -->
-                    <div class="all-events-container">
-                        @if (Model.Events != null && Model.Events.Any())
-                        {
-                            <div class="events-grid">
-                                @foreach (var eventItem in Model.Events)
+            <div class="events-card-body">
+                <!-- Filter Section -->
+                <div class="filter-section-embedded">
+                    <form method="get" id="filterForm" class="filter-form">
+                        <div class="filter-group">
+                            <label for="category">Category</label>
+                            <select class="form-select" id="category" name="category">
+                                <option value="">All Categories</option>
+                                @foreach (var c in Model.Categories)
                                 {
-                                    <div class="event-card">
-                                        <div class="event-card-header">
-                                            <span class="event-category">@eventItem.Category</span>
-                                            <span class="event-date-badge">@eventItem.Date.ToString("MMM dd")</span>
-                                        </div>
-                                        <h5 class="event-title">@eventItem.Title</h5>
-                                        <div class="event-meta">
-                                            <div class="event-meta-item">
-                                                <i class="fas fa-calendar"></i>
-                                                @eventItem.Date.ToString("MMMM dd, yyyy") at @eventItem.Time.ToString("HH:mm")
-                                            </div>
-                                            <div class="event-meta-item">
-                                                <i class="fas fa-map-marker-alt"></i>
-                                                @eventItem.Location
-                                            </div>
-                                        </div>
-                                        <p class="event-description">
-                                            @(eventItem.Description.Length > 100 ? eventItem.Description.Substring(0, 100) + "..." : eventItem.Description)
-                                        </p>
-                                        <button class="btn btn-outline-primary event-view-btn">
-                                            <i class="fas fa-eye me-1"></i>View Details
-                                        </button>
-                                    </div>
+                                    <option value="@c" selected="@(Model.SelectedCategory == c)">@c</option>
                                 }
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="empty-state">
-                                <i class="fas fa-calendar-times"></i>
-                                <h4>No Events Available</h4>
-                                <p>There are no upcoming events at this time. Please check back later!</p>
-                            </div>
-                        }
+                            </select>
+                        </div>
+
+                        <div class="filter-group">
+                            <label for="startDate">Start Date</label>
+                            <input type="date" class="form-control" id="startDate" name="startDate"
+                                   value="@(Model.StartDate?.ToString("yyyy-MM-dd") ?? "")" />
+                        </div>
+
+                        <div class="filter-group">
+                            <label for="endDate">End Date</label>
+                            <input type="date" class="form-control" id="endDate" name="endDate"
+                                   value="@(Model.EndDate?.ToString("yyyy-MM-dd") ?? "")" />
+                        </div>
+
+                        <div class="filter-buttons">
+                            <button type="submit" name="search" value="true" class="btn btn-primary">Search</button>
+                            <button type="button" class="btn btn-outline-dark" onclick="resetFilters(event)">Reset</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Recommended Events Section -->
+                @if (Model.RecommendedEvents != null && Model.RecommendedEvents.Any())
+                {
+                    <div class="recommended-section-embedded">
+                        <div class="section-divider-small">
+                            <h4 class="section-title-small">
+                                <i class="fas fa-star"></i>
+                                Recommended for You
+                            </h4>
+                            @* <small class="text-muted ms-2">Based on your interests</small> *@
+                        </div>
+
+                        <div class="events-grid recommended-events" id="recommendedEvents">
+                            @foreach (var recommendedEvent in Model.RecommendedEvents.Take(3))
+                            {
+                                <div class="event-card">
+                                    <div class="event-card-header">
+                                        <h5 class="event-title">@recommendedEvent.Title</h5>
+                                        <span class="event-category">@recommendedEvent.Category</span>
+                                    </div>
+                                    <span class="event-date-badge">@recommendedEvent.Date.ToString("MMMM dd, yyyy") at @recommendedEvent.Time.ToString("HH:mm")</span>
+                                    <div class="event-meta">
+                                        <div class="event-meta-item">
+                                            @recommendedEvent.Location
+                                        </div>
+                                    </div>
+                                    <p class="event-description">
+                                        @(recommendedEvent.Description.Length > 120 ? recommendedEvent.Description.Substring(0, 120) + "..." : recommendedEvent.Description)
+                                    </p>
+                                    <a href="#" class="event-view-link">View Details →</a>
+                                </div>
+                            }
+                        </div>
                     </div>
+                }
+
+                <!-- All Events Grid -->
+                <div class="all-events-section-embedded">
+                    <div class="all-events-section-header">
+                        <h4 class="all-events-section-title">
+                            <i class="fas fa-list"></i>
+                            Events
+                        </h4>
+                    </div>
+                    @if (Model.Events != null && Model.Events.Any())
+                    {
+                        <div class="events-grid" id="allEvents">
+                            @foreach (var eventItem in Model.Events)
+                            {
+                                <div class="event-card">
+                                    <div class="event-card-header">
+                                        <h5 class="event-title">@eventItem.Title</h5>
+                                        <span class="event-category">@eventItem.Category</span>
+                                    </div>
+                                    <span class="event-date-badge">@eventItem.Date.ToString("MMMM dd, yyyy") at @eventItem.Time.ToString("HH:mm")</span>
+                                    <div class="event-meta">
+                                        <div class="event-meta-item">
+                                            @eventItem.Location
+                                        </div>
+                                    </div>
+                                    <p class="event-description">
+                                        @(eventItem.Description.Length > 140 ? eventItem.Description.Substring(0, 140) + "..." : eventItem.Description)
+                                    </p>
+                                    <a href="#" class="event-view-link">View Details →</a>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="empty-state">
+                            <i class="fas fa-calendar-times"></i>
+                            <h4>No Events Available</h4>
+                            <p>There are no upcoming events at this time. Please check back later!</p>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
