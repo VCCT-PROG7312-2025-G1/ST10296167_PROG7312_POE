@@ -29,12 +29,10 @@
                         {
                             <div class="announcement-card" data-category="@announcement.Category">
                                 <div class="announcement-header">
-                                    <div>
-                                        <span class="announcement-category">@announcement.Category</span>
-                                        <h5 class="announcement-title">@announcement.Title</h5>
-                                    </div>
+                                    <span class="announcement-category">@announcement.Category</span>
                                     <span class="announcement-date">@announcement.CreatedAt.ToString("MMM dd, yyyy")</span>
                                 </div>
+                                <h5 class="announcement-title">@announcement.Title</h5>
                                 <hr class="announcement-separator" />
                                 <p class="announcement-content">@announcement.Content</p>
                             </div>
