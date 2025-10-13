@@ -24,7 +24,7 @@ namespace ST10296167_PROG7312_POE.Controllers
 
         // Views
         //------------------------------------------------------------------------------------------------------------------------------------------//
-        public async Task<IActionResult> EventsAndAnnouncements(string? category, DateTime? startDate, DateTime? endDate)
+        public async Task<IActionResult> EventsAndAnnouncements(string? category, DateTime? startDate, DateTime? endDate, string? search)
         {
             // If employee, redirect to dashboard
             if (_signInManager.IsSignedIn(User))
@@ -32,8 +32,12 @@ namespace ST10296167_PROG7312_POE.Controllers
                 return RedirectToAction("Dashboard", "User");
             }
 
-            bool noSearch = string.IsNullOrEmpty(category) && !startDate.HasValue && !endDate.HasValue;
+            // Check if user has searched
+            bool userSearched = !string.IsNullOrEmpty(search);
+            bool noSearchFilters = string.IsNullOrEmpty(category) && !startDate.HasValue && !endDate.HasValue;
+            bool noSearch = !userSearched || noSearchFilters;
 
+            // Populate the view model
             if (noSearch)
             {
                 Console.WriteLine("NO SEARCH HIT");
@@ -64,18 +68,6 @@ namespace ST10296167_PROG7312_POE.Controllers
                 };
                 return View(viewModel);
             }
-
-                //var viewModel = new EventsAnnouncementsViewModel
-                //{
-                //    SelectedCategory = category,
-                //    StartDate = startDate,
-                //    EndDate = endDate,
-                //    Events = await _eventService.SearchEventsAsync(category, startDate, endDate),
-                //    Announcements = await _announcementService.GetRecentAnnouncementsAsync(10),
-                //    Categories = await _eventService.GetAllCategoriesAsync(),
-                //    RecommendedEvents = await _eventService.GetRecommendedEventsAsync()
-                //};
-            //return View(viewModel);
         }
         
         public IActionResult AddEvent()

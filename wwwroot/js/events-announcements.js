@@ -1,8 +1,7 @@
 // Events & Announcements Page JavaScript
 
 document.addEventListener("DOMContentLoaded", function () {
-  initializeFilters();
-  initializeEventInteractions();
+    initializeEventInteractions();
 });
 
 // Save scroll position before the page unloads
@@ -12,10 +11,18 @@ window.addEventListener('beforeunload', function () {
 
 // Restore scroll position after the page loads
 window.addEventListener('DOMContentLoaded', function () {
+    // Restore scroll position
     const scrollPos = sessionStorage.getItem('scrollPos');
     if (scrollPos) {
         window.scrollTo(0, parseInt(scrollPos));
-        sessionStorage.removeItem('scrollPos'); // optional cleanup
+        sessionStorage.removeItem('scrollPos'); 
+    }
+
+    // Remove 'search' param from URL after refresh (stops unnecessary search calls)
+    const url = new URL(window.location);
+    if (url.searchParams.has('search')) {
+        url.searchParams.delete('search');
+        history.replaceState(null, '', url);
     }
 });
 
