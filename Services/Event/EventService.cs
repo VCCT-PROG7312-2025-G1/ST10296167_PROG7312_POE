@@ -25,12 +25,16 @@ namespace ST10296167_PROG7312_POE.Services.Event
         public async Task<List<EventModel>> GetAllEventsAsync()
         {
             var allEvents = new List<EventModel>();
+            var today = DateTime.Today; // Only include current or future events
 
-            foreach(var kvp in _dataStore.EventsByDate)
+            foreach (var kvp in _dataStore.EventsByDate)
             {
-                // Sort events on the same day by time
-                var eventsByTime = kvp.Value.OrderBy(e => e.Time);
-                allEvents.AddRange(eventsByTime);
+                if (kvp.Key >= today)
+                {
+                    // Sort events on the same day by time
+                    var eventsByTime = kvp.Value.OrderBy(e => e.Time);
+                    allEvents.AddRange(eventsByTime);
+                }
             }
             
             return await Task.FromResult(allEvents);
@@ -96,7 +100,7 @@ namespace ST10296167_PROG7312_POE.Services.Event
         {
             var filteredEvents = new List<EventModel>();
 
-            var from = startDate ?? DateTime.MinValue;
+            var from = startDate ?? DateTime.Today;
             var to = endDate ?? DateTime.MaxValue;
 
             foreach(var kvp in _dataStore.EventsByDate)
