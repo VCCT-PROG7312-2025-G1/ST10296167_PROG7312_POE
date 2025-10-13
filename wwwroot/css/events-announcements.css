@@ -1,9 +1,116 @@
+.announcement-card[data-category="Information"] {
+  border-color: #2196f3;
+}
+.announcement-card[data-category="Alert"] {
+  border-color: #e74c3c;
+}
+.announcement-card[data-category="Update"] {
+  border-color: #27ae60;
+}
+
+.announcement-card[data-category="Information"] .announcement-category {
+  background: #2196f3;
+  color: #fff;
+}
+.announcement-card[data-category="Alert"] .announcement-category {
+  background: #e74c3c;
+  color: #fff;
+}
+.announcement-card[data-category="Update"] .announcement-category {
+  background: #27ae60;
+  color: #fff;
+}
+.announcement-card {
+  /* Announcement card specific styles */
+}
+.announcement-category {
+  display: inline-block;
+  background: #e9ecef;
+  color: #495057;
+  font-size: 1.05rem;
+  font-weight: 700;
+  border-radius: 14px;
+  padding: 0.32rem 1.2rem;
+  margin-bottom: 0.6rem;
+  margin-right: 0.7rem;
+  letter-spacing: 0.3px;
+}
+.announcement-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.7rem;
+  gap: 1.2rem;
+}
+.announcements-content .announcement-card .announcement-title {
+  font-weight: 900;
+  color: #222;
+  font-size: 1.25rem !important;
+  margin: 0 0 0.2rem 0;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+  white-space: normal;
+  word-break: break-word;
+  max-width: 100%;
+}
+.announcement-date {
+  color: #6c757d;
+  font-size: 1.05rem;
+  font-weight: 700;
+  white-space: nowrap;
+  margin-left: 0.75rem;
+  margin-top: 0.1rem;
+}
+.announcement-separator {
+  border: none;
+  border-top: 2.5px solid #bbb;
+  margin: 0.7rem 0 1.1rem 0;
+}
+.announcement-content {
+  color: #495057;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  margin: 0;
+}
+.announcement-card:last-child {
+  margin-right: 2.5rem;
+}
+/* --- Custom Events & Announcements Header Styles --- */
+.events-announcements-header {
+  background: none;
+  color: #212529;
+  padding: 2.5rem 0 1.5rem 0;
+  margin-bottom: 0;
+  border: none;
+  box-shadow: none;
+  position: static;
+  z-index: auto;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.announcements-content {
+  display: flex;
+  flex-direction: row;
+  min-width: 0;
+  height: 100%;
+  align-items: stretch;
+  padding-left: 0.5rem;
+  box-sizing: border-box;
+}
+.announcement-card:not(:last-child) {
+  margin-right: 1.2rem;
+}
+.announcement-card:last-child {
+  margin-right: 2.5rem;
+}
+/* Header Accent Bar for Page Header */
+
 /* Events & Announcements Page Styles */
 
 .events-announcements-container {
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  display: block;
   padding: 0;
   margin: 0;
   width: 100vw;
@@ -16,31 +123,58 @@
   max-width: none;
 }
 
-.page-header {
-  background: linear-gradient(135deg, #0d6efd 0%, #0056b3 100%);
-  color: white;
-  padding: 1rem 0;
+/* --- Custom Page Header Styles --- */
+.events-announcements-container > .page-header {
+  background: transparent !important;
+  color: #212529;
+  padding: 3rem 0 2.25rem 0;
   margin-bottom: 0;
+  border-bottom: 2.5px solid #e9ecef;
+  box-shadow: 0 4px 18px rgba(13, 110, 253, 0.07);
+  position: relative;
+  z-index: 2;
 }
 
-.page-header h1 {
-  font-size: 1.8rem;
-  font-weight: 700;
-  margin-bottom: 0.25rem;
+.events-announcements-container > .page-header h1 {
+  font-size: 2.8rem;
+  font-weight: 900;
+  margin-bottom: 0.5rem;
+  letter-spacing: -1.5px;
+  color: #0d6efd;
+  text-shadow: 0 2px 8px rgba(13, 110, 253, 0.08);
+  line-height: 1.1;
 }
 
-.page-header .lead {
-  font-size: 0.95rem;
-  opacity: 0.9;
+.events-announcements-container > .page-header .lead {
+  font-size: 1.25rem;
+  opacity: 0.88;
   margin-bottom: 0;
+  color: #495057;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.events-announcements-container .page-header h1 {
+  font-size: 2.5rem !important;
+  font-weight: 800 !important;
+  margin-bottom: 0.5rem !important;
+  letter-spacing: -1px !important;
+  color: #0d6efd !important;
+  text-shadow: 0 2px 8px rgba(13, 110, 253, 0.07) !important;
+}
+
+.events-announcements-container .page-header .lead {
+  font-size: 1.15rem !important;
+  opacity: 0.85 !important;
+  margin-bottom: 0 !important;
+  color: #495057 !important;
+  font-weight: 500 !important;
 }
 
 /* Announcements Section - 1/3 of viewport */
 .announcements-section {
   padding: 1rem;
-  height: 33vh;
-  display: flex;
-  flex-direction: column;
+  display: block;
 }
 
 .announcements-card {
@@ -72,25 +206,50 @@
 }
 
 .announcements-card-body {
-  flex: 1;
-  padding: 1rem;
-  overflow-y: auto;
+  padding: 1.5rem 1.2rem 1.5rem 1.2rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  height: 420px;
+  min-height: 420px;
+  max-height: 420px;
+  box-sizing: border-box;
 }
 
 .announcements-content {
-  flex: 1;
-  overflow-y: auto;
-  padding-right: 0.5rem;
+  display: flex;
+  flex-direction: row;
+  gap: 1.2rem;
+  min-width: 0;
+  height: 100%;
+  align-items: stretch;
 }
 
 .announcement-card {
   background: white;
   border: 1px solid #e9ecef;
-  border-radius: 6px;
-  padding: 0.75rem;
-  margin-bottom: 0.5rem;
+  border-radius: 14px;
+  padding: 1.5rem 1rem;
+  min-width: 320px;
+  max-width: 320px;
+  height: 100%;
+  flex: 0 0 320px;
+  margin-bottom: 0;
   transition: all 0.2s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.announcement-category {
+  display: inline-block;
+  background: #e9ecef;
+  color: #495057;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 12px;
+  padding: 0.2rem 0.9rem;
+  margin-bottom: 0.5rem;
+  margin-right: 0.5rem;
 }
 
 .announcement-card:hover {
@@ -98,8 +257,20 @@
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
 }
 
-.announcement-card:last-child {
-  margin-bottom: 0;
+.announcements-card-body::-webkit-scrollbar {
+  height: 12px;
+}
+.announcements-card-body::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 6px;
+}
+.announcements-card-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 6px;
+}
+.announcements-card-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
 }
 
 .announcement-header {
@@ -181,11 +352,8 @@
 
 /* Events Section - 2/3 of viewport */
 .events-section {
-  flex: 1;
   padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  min-height: 67vh;
+  display: block;
 }
 
 .events-card {
@@ -414,8 +582,8 @@
     gap: 0.75rem;
   }
 
-  .page-header h1 {
-    font-size: 1.5rem;
+  .events-announcements-container > .page-header h1 {
+    font-size: 2.1rem;
   }
 
   .announcements-section {
