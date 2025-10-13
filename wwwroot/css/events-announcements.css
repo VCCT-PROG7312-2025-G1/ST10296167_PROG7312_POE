@@ -375,36 +375,6 @@ body {
     gap: 0.5rem;
 }
 
-.btn {
-    padding: 0.5rem 1.25rem;
-    border: none;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.btn-primary {
-    background-color: #0d6efd;
-    color: white;
-    border: none;
-}
-
-    .btn-primary:hover {
-        background-color: #0a58ca;
-    }
-
-.btn-outline-dark {
-    background-color: transparent;
-    border: 1px solid #212529;
-    color: #212529;
-}
-
-    .btn-outline-dark:hover {
-        background-color: #212529;
-        color: white;
-    }
 
 /* Recommended Events */
 .recommended-section-embedded {
@@ -413,6 +383,44 @@ body {
     border-radius: 6px;
     padding: 1rem;
     margin-bottom: 1.5rem;
+}
+
+.recommended-section-embedded .events-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+/* Normal Events */
+.normal-events-section-embedded {
+    background: #f0f4ff;
+    border: 1px solid #c7d2fe;
+    border-radius: 6px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.normal-events-section-embedded .events-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.section-divider-small {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 0 0 1.5rem 0;
+}
+
+.section-title-small {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #495057;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .recommended-events .event-view-link {
@@ -424,8 +432,8 @@ body {
         text-decoration: underline;
     }
 
-/* Events Grid */
-.all-events-section-embedded .events-grid {
+/* Events Grid - General fallback */
+.events-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
@@ -593,9 +601,6 @@ body {
         width: 100%;
     }
 
-        .filter-buttons .btn {
-            flex: 1;
-        }
 
     .events-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -658,9 +663,6 @@ body {
         width: 100%;
     }
 
-        .filter-buttons .btn {
-            width: 100%;
-        }
 
     .events-grid {
         grid-template-columns: 1fr;
