@@ -32,8 +32,10 @@ namespace ST10296167_PROG7312_POE.Services.Event
                 var eventsByTime = kvp.Value.OrderBy(e => e.Time);
                 allEvents.AddRange(eventsByTime);
             }
+            
             return await Task.FromResult(allEvents);
         }
+
         public async Task<bool> AddEventAsync(EventModel newEvent)
         {
             try
@@ -77,6 +79,17 @@ namespace ST10296167_PROG7312_POE.Services.Event
 
             var categories = _dataStore.UniqueCategories.ToList();
             return Task.FromResult(categories);
+        }
+
+        public Task<List<EventModel>> GetCurrentRecommendationsAsync()
+        {
+            // Return cached recommendations if available
+            if (_dataStore.CurrentRecommendations != null && _dataStore.CurrentRecommendations.Any())
+            {
+                Console.WriteLine("GOT FROM CURRENT RECS");
+                return Task.FromResult(_dataStore.CurrentRecommendations);
+            }
+            return Task.FromResult(new List<EventModel>());
         }
 
         public Task<List<EventModel>> SearchEventsAsync(string? category, DateTime? startDate, DateTime? endDate)
@@ -167,6 +180,11 @@ namespace ST10296167_PROG7312_POE.Services.Event
                     .ToList();
 
                 Console.WriteLine($"Generated {recommendedEvents.Count} recommendations based on search history");
+
+                // Save to list for refernce
+                _dataStore.CurrentRecommendations.Clear();
+                _dataStore.CurrentRecommendations.AddRange(recommendedEvents);
+
                 return Task.FromResult(recommendedEvents);
             }
             catch (Exception ex)
@@ -388,7 +406,7 @@ namespace ST10296167_PROG7312_POE.Services.Event
             }
             else
             {
-                // No preference data - use default scoring
+                // No preference data (use default scoring)
                 if (daysUntilEvent <= 3 && daysUntilEvent >= 0)
                 {
                     score += 7;

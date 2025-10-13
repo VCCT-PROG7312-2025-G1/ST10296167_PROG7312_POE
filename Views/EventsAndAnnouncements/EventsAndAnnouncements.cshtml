@@ -152,7 +152,7 @@
                         @if (Model.Events != null && Model.Events.Any())
                         {
                             <div class="events-grid">
-                                @foreach (var eventItem in Model.Events.OrderBy(e => e.Date).ThenBy(e => e.Time))
+                                @foreach (var eventItem in Model.Events)
                                 {
                                     <div class="event-card">
                                         <div class="event-card-header">

@@ -13,6 +13,7 @@ namespace ST10296167_PROG7312_POE.Data
         public HashSet<string> UniqueCategories { get; set; } = new HashSet<string>();
         public Stack<Announcement> RecentAnnouncements { get; set; } = new Stack<Announcement>();
         public Queue<SearchQuery> SearchHistory { get; set; } = new Queue<SearchQuery>();
+        public List<Event> CurrentRecommendations { get; set; } = new List<Event>();
 
         // Constructor
         //------------------------------------------------------------------------------------------------------------------------------------------//
