@@ -2,6 +2,7 @@
 
 document.addEventListener("DOMContentLoaded", function () {
     initializeEventInteractions();
+    initializeModalFunctionality();
     restoreScrollPosition();
     removeSearchParam();
 });
@@ -29,6 +30,114 @@ function removeSearchParam() {
     }
 }
 
+// Initialize modal functionality
+function initializeModalFunctionality() {
+    // Get modal elements
+    const eventDetailsModal = document.getElementById('eventDetailsModal');
+    const announcementDetailsModal = document.getElementById('announcementDetailsModal');
+
+    // Check if modals exist
+    if (!eventDetailsModal || !announcementDetailsModal) {
+        console.error('Modal elements not found in DOM');
+        return;
+    }
+
+    // Initialize Bootstrap modals
+    const eventModal = new bootstrap.Modal(eventDetailsModal);
+    const announcementModal = new bootstrap.Modal(announcementDetailsModal);
+
+    // Event view details links
+    document.addEventListener('click', function (e) {
+        if (e.target.classList.contains('event-view-link')) {
+            e.preventDefault();
+            const eventCard = e.target.closest('.event-card');
+            if (eventCard) {
+                openEventModal(eventCard, eventModal);
+            }
+        }
+    });
+
+    // Announcement read more links
+    document.addEventListener('click', function (e) {
+        if (e.target.classList.contains('announcement-read-more')) {
+            e.preventDefault();
+            const announcementCard = e.target.closest('.announcement-card');
+            if (announcementCard) {
+                openAnnouncementModal(announcementCard, announcementModal);
+            }
+        }
+    });
+}
+
+function openEventModal(eventCard, modal) {
+    try {
+        const title = eventCard.querySelector('.event-title').textContent.trim();
+        const category = eventCard.querySelector('.event-category').textContent.trim();
+        const dateBadge = eventCard.querySelector('.event-date-badge').textContent.trim();
+        const location = eventCard.querySelector('.event-meta-item').textContent.trim();
+        const description = eventCard.dataset.fullDescription ||
+            eventCard.querySelector('.event-description').textContent.trim();
+
+        // Determine the type (recommended vs normal) for styling
+        const isRecommended = eventCard.closest('.recommended-events') !== null;
+        const modalHeader = document.getElementById('eventDetailsModal').querySelector('.modal-header');
+
+        // Update modal header color
+        modalHeader.className = 'modal-header';
+        if (isRecommended) {
+            modalHeader.classList.add('modal-header-success');
+        } else {
+            modalHeader.classList.add('modal-header-primary');
+        }
+
+        // Populate modal content
+        document.getElementById('eventModalTitle').textContent = title;
+        document.getElementById('eventModalCategory').textContent = category;
+        document.getElementById('eventModalDate').textContent = dateBadge;
+        document.getElementById('eventModalLocation').textContent = location;
+        document.getElementById('eventModalDescription').textContent = description;
+        document.getElementById('eventModalDescription').style.whiteSpace = 'pre-wrap';
+        document.getElementById('eventModalDescription').style.wordWrap = 'break-word';
+
+        modal.show();
+    } catch (error) {
+        console.error('Error opening event modal:', error);
+    }
+}
+
+function openAnnouncementModal(announcementCard, modal) {
+    try {
+        const title = announcementCard.querySelector('.announcement-title').textContent.trim();
+        const category = announcementCard.querySelector('.announcement-category').textContent.trim();
+        const date = announcementCard.querySelector('.announcement-date').textContent.trim();
+        const content = announcementCard.dataset.fullContent ||
+            announcementCard.querySelector('.announcement-content').textContent.trim();
+
+        // Determine announcement type for styling based on category
+        const modalHeader = document.getElementById('announcementDetailsModal').querySelector('.modal-header');
+        modalHeader.className = 'modal-header';
+
+        if (category === 'Information') {
+            modalHeader.classList.add('modal-header-info');
+        } else if (category === 'Alert') {
+            modalHeader.classList.add('modal-header-alert');
+        } else if (category === 'Update') {
+            modalHeader.classList.add('modal-header-update');
+        }
+
+        // Populate modal content
+        document.getElementById('announcementModalTitle').textContent = title;
+        document.getElementById('announcementModalCategory').textContent = category;
+        document.getElementById('announcementModalDate').textContent = date;
+        document.getElementById('announcementModalContent').textContent = content;
+        document.getElementById('announcementModalContent').style.whiteSpace = 'pre-wrap';
+        document.getElementById('announcementModalContent').style.wordWrap = 'break-word';
+
+        modal.show();
+    } catch (error) {
+        console.error('Error opening announcement modal:', error);
+    }
+}
 
 //Initialize event interactions and click handlers
 function initializeEventInteractions() {
@@ -37,11 +146,7 @@ function initializeEventInteractions() {
     viewLinks.forEach((link) => {
         link.addEventListener("click", function (e) {
             e.preventDefault();
-            const eventTitle =
-                this.closest(".event-card").querySelector(".event-title").textContent;
-            // TODO: Implement event details modal or navigation
-            console.log("View details for event:", eventTitle);
-            alert("Event details functionality to be implemented");
+            // Modal handling is now done by initializeModalFunctionality()
         });
     });
 }

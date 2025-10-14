@@ -26,7 +26,7 @@
                     <div class="announcements-content" id="announcementsContent">
                         @foreach (var announcement in Model.Announcements.Take(10))
                         {
-                            <div class="announcement-card" data-category="@announcement.Category">
+                            <div class="announcement-card" data-category="@announcement.Category" data-full-content="@announcement.Content">
                                 <div class="announcement-header">
                                     <span class="announcement-category">@announcement.Category</span>
                                     <span class="announcement-date">@announcement.CreatedAt.ToString("MMM dd, yyyy")</span>
@@ -106,13 +106,12 @@
                                 <i class="fas fa-star"></i>
                                 Recommended for You
                             </h4>
-                            @* <small class="text-muted ms-2">Based on your interests</small> *@
                         </div>
 
                         <div class="events-grid recommended-events" id="recommendedEvents">
                             @foreach (var recommendedEvent in Model.RecommendedEvents.Take(3))
                             {
-                                <div class="event-card">
+                                <div class="event-card" data-full-description="@recommendedEvent.Description">
                                     <div class="event-card-header">
                                         <h5 class="event-title">@recommendedEvent.Title</h5>
                                         <span class="event-category">@recommendedEvent.Category</span>
@@ -146,7 +145,7 @@
                         <div class="events-grid" id="allEvents">
                             @foreach (var eventItem in Model.Events)
                             {
-                                <div class="event-card">
+                                <div class="event-card" data-full-description="@eventItem.Description">
                                     <div class="event-card-header">
                                         <h5 class="event-title">@eventItem.Title</h5>
                                         <span class="event-category">@eventItem.Category</span>
@@ -174,6 +173,74 @@
                         </div>
                     }
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Event Details Modal -->
+<div class="modal fade" id="eventDetailsModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header modal-header-primary">
+                <h5 class="modal-title" id="eventModalLabel">
+                    <i class="fas fa-calendar-alt me-2"></i>
+                    <span id="eventModalTitle"></span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-detail-section">
+                    <h6 class="modal-label">Category</h6>
+                    <p id="eventModalCategory" class="modal-value"></p>
+                </div>
+                <div class="modal-detail-section">
+                    <h6 class="modal-label">Date & Time</h6>
+                    <p id="eventModalDate" class="modal-value"></p>
+                </div>
+                <div class="modal-detail-section">
+                    <h6 class="modal-label">Location</h6>
+                    <p id="eventModalLocation" class="modal-value"></p>
+                </div>
+                <div class="modal-detail-section">
+                    <h6 class="modal-label">Description</h6>
+                    <p id="eventModalDescription" class="modal-value"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Announcement Details Modal -->
+<div class="modal fade" id="announcementDetailsModal" tabindex="-1" role="dialog" aria-labelledby="announcementModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header modal-header-primary">
+                <h5 class="modal-title" id="announcementModalLabel">
+                    <i class="fas fa-bullhorn me-2"></i>
+                    <span id="announcementModalTitle"></span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-detail-section">
+                    <h6 class="modal-label">Category</h6>
+                    <p id="announcementModalCategory" class="modal-value"></p>
+                </div>
+                <div class="modal-detail-section">
+                    <h6 class="modal-label">Date</h6>
+                    <p id="announcementModalDate" class="modal-value"></p>
+                </div>
+                <div class="modal-detail-section">
+                    <h6 class="modal-label">Content</h6>
+                    <p id="announcementModalContent" class="modal-value"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
