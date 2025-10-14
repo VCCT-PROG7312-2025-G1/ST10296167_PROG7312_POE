@@ -29,7 +29,7 @@ namespace ST10296167_PROG7312_POE.Repository.Announcement
         public async Task<List<AnnouncementModel>> GetAllAnnouncementsAsync()
         {
             return await _context.Announcements
-                .OrderByDescending(a => a.CreatedAt)
+                .OrderBy(a => a.CreatedAt)
                 .ToListAsync();
         }
         public async Task<AnnouncementModel> GetByIdAsync(int id)

@@ -72,7 +72,7 @@ namespace ST10296167_PROG7312_POE.Services.Initialization
                 {
                     // Create a new issue for the in-memory structure
                     var issue = new Issue
-                    {
+                    { 
                         ID = dbIssue.ID,
                         Address = dbIssue.Address,
                         Suburb = dbIssue.Suburb,
