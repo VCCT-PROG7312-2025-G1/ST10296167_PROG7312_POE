@@ -25,7 +25,9 @@ namespace ST10296167_PROG7312_POE.Services.Event
         public async Task<List<EventModel>> GetAllEventsAsync()
         {
             var allEvents = new List<EventModel>();
-            var today = DateTime.Today; // Only include current or future events
+
+            // Only include current or future events
+            var today = DateTime.Today;
 
             foreach (var kvp in _dataStore.EventsByDate)
             {
@@ -40,6 +42,7 @@ namespace ST10296167_PROG7312_POE.Services.Event
             return await Task.FromResult(allEvents);
         }
 
+        // Add a new event to the database and dictionary
         public async Task<bool> AddEventAsync(EventModel newEvent)
         {
             try
@@ -67,12 +70,12 @@ namespace ST10296167_PROG7312_POE.Services.Event
             }
         }
 
+        // Get all event categories to populate the unique categories hash set
         public Task<List<string>> GetAllCategoriesAsync()
         {
             // Clear set
             _dataStore.UniqueCategories.Clear();
 
-            // Populate set
             foreach (var kvp in _dataStore.EventsByDate)
             {
                 foreach (var ev in kvp.Value)
@@ -81,21 +84,24 @@ namespace ST10296167_PROG7312_POE.Services.Event
                 }
             }
 
+            // Populate set
             var categories = _dataStore.UniqueCategories.ToList();
+
             return Task.FromResult(categories);
         }
 
+        // Get current recommendations from the list
         public Task<List<EventModel>> GetCurrentRecommendationsAsync()
         {
-            // Return cached recommendations if available
+            // Return cached recommendations list if available
             if (_dataStore.CurrentRecommendations != null && _dataStore.CurrentRecommendations.Any())
             {
-                Console.WriteLine("GOT FROM CURRENT RECS");
                 return Task.FromResult(_dataStore.CurrentRecommendations);
             }
             return Task.FromResult(new List<EventModel>());
         }
 
+        // Find and return events based on search filters
         public Task<List<EventModel>> SearchEventsAsync(string? category, DateTime? startDate, DateTime? endDate)
         {
             var filteredEvents = new List<EventModel>();
@@ -129,6 +135,7 @@ namespace ST10296167_PROG7312_POE.Services.Event
             return Task.FromResult(filteredEvents);
         }
 
+        // Generate event recommendations based on search history
         public Task<List<EventModel>> GetRecommendedEventsAsync()
         {
             try
@@ -173,19 +180,19 @@ namespace ST10296167_PROG7312_POE.Services.Event
                     scoredEvents.Add((ev, score));
                 }
 
-                // Sort by score (descending), then by date (ascending) for tiebreaker
+                // Get top 3 highest scoring events
                 var recommendedEvents = scoredEvents
-                    .Where(x => x.Score > 0) // Only include events with positive score
+                    .Where(x => x.Score > 0) 
                     .OrderByDescending(x => x.Score)
                     .ThenBy(x => x.Event.Date)
                     .ThenBy(x => x.Event.Time)
                     .Select(x => x.Event)
-                    .Take(3) // Return top 3
+                    .Take(3) 
                     .ToList();
 
                 Console.WriteLine($"Generated {recommendedEvents.Count} recommendations based on search history");
 
-                // Save to list for refernce
+                // Save to list
                 _dataStore.CurrentRecommendations.Clear();
                 _dataStore.CurrentRecommendations.AddRange(recommendedEvents);
 
@@ -198,7 +205,7 @@ namespace ST10296167_PROG7312_POE.Services.Event
             }
         }
 
-        // Helper method: Analyze search patterns from history
+        // Analyze search patterns from search history to determine user preferences for event recommendations
         private SearchPatternAnalysis AnalyzeSearchPatterns(Queue<SearchQuery> searchHistory)
         {
             var analysis = new SearchPatternAnalysis();
@@ -217,14 +224,14 @@ namespace ST10296167_PROG7312_POE.Services.Event
 
                 // MONTH ANALYSIS
 
-                // Analyze StartDate if provided
+                // Analyze start date
                 if (search.StartDate.HasValue)
                 {
                     int month = search.StartDate.Value.Month;
                     IncrementDictionary(analysis.MonthPreferences, month);
                 }
 
-                // Analyze EndDate if provided
+                // Analyze end date
                 if (search.EndDate.HasValue)
                 {
                     int month = search.EndDate.Value.Month;
@@ -255,7 +262,7 @@ namespace ST10296167_PROG7312_POE.Services.Event
                 }
                 else if (search.StartDate.HasValue || search.EndDate.HasValue)
                 {
-                    // Assume near-term if only one date is provided
+                    // Assume near-term if only one date is searched
                     IncrementDictionary(analysis.DayRangePreferences, "near-term");
                 }
             }
@@ -264,8 +271,9 @@ namespace ST10296167_PROG7312_POE.Services.Event
 
             return analysis;
         }
-        
-        // Calculate score for a single event
+
+        // Calculate score
+        // I used Claude to help me brainstorm & design this recommendation algorithm using a point system
         private int CalculateEventScore(EventModel ev, SearchPatternAnalysis analysis)
         {
             int score = 0;
@@ -273,64 +281,10 @@ namespace ST10296167_PROG7312_POE.Services.Event
             var eventDateTime = ev.Date.ToDateTime(ev.Time);
 
             // CATEGORY SCORING (0-10 points)
-
-            if (analysis.CategoryFrequency.Count > 0)
-            {
-                // Get sorted list of categories by frequency (highest first)
-                var sortedCategories = analysis.CategoryFrequency
-                    .OrderByDescending(x => x.Value)
-                    .Select(x => x.Key)
-                    .ToList();
-
-                // Check if event category matches user's top categories
-                if (sortedCategories.Count > 0 && ev.Category == sortedCategories[0])
-                {
-                    // most searched category +10 points
-                    score += 10;
-                    Console.WriteLine($"Event '{ev.Title}' matched top category '{ev.Category}': +10");
-                }
-                else if (sortedCategories.Count > 1 && ev.Category == sortedCategories[1])
-                {
-                    // 2ND most searched category +8 points
-                    score += 8;
-                    Console.WriteLine($"Event '{ev.Title}' matched 2nd category '{ev.Category}': +8");
-                }
-                else if (sortedCategories.Count > 2 && ev.Category == sortedCategories[2])
-                {
-                    // 3RD most searched category +6 points
-                    score += 6;
-                    Console.WriteLine($"Event '{ev.Title}' matched 3rd category '{ev.Category}': +6");
-                }
-                else if (analysis.AllSearchedCategories.Contains(ev.Category))
-                {
-                    // Category appears in search history but not top 3 +4 points
-                    score += 4;
-                    Console.WriteLine($"Event '{ev.Title}' matched searched category '{ev.Category}': +4");
-                }
-            }
+            score += CategoryScore(ev, analysis);
 
             // MONTH PREFERENCE SCORING (0-4 points)
-
-            int eventMonth = ev.Date.Month;
-
-            if (analysis.MonthPreferences.Count > 0)
-            {
-                // Get the most frequently searched month
-                var topMonth = analysis.MonthPreferences.OrderByDescending(x => x.Value).First().Key;
-
-                if (eventMonth == topMonth)
-                {
-                    // Event is in user's most-searched month +4 points
-                    score += 4;
-                    Console.WriteLine($"Event '{ev.Title}' is in top month ({GetMonthName(eventMonth)}): +4");
-                }
-                else if (analysis.MonthPreferences.ContainsKey(eventMonth))
-                {
-                    // Event is in a month user has searched +2 points
-                    score += 2;
-                    Console.WriteLine($"Event '{ev.Title}' is in searched month ({GetMonthName(eventMonth)}): +2");
-                }
-            }
+            score += MonthScore(ev, analysis);
 
             // DAY RANGE / PROXIMITY SCORING (0-7 points)
 
@@ -343,100 +297,198 @@ namespace ST10296167_PROG7312_POE.Services.Event
             if (userPreferredRange == "near-term")
             {
                 // User prefers near-term events (1 week)
-                if (daysUntilEvent <= 3 && daysUntilEvent >= 0)
-                {
-                    score += 7;
-                    Console.WriteLine($"Event '{ev.Title}' is within 3 days (user prefers near-term): +7");
-                }
-                else if (daysUntilEvent <= 7 && daysUntilEvent > 3)
-                {
-                    score += 5;
-                    Console.WriteLine($"Event '{ev.Title}' is within 7 days (user prefers near-term): +5");
-                }
-                else if (daysUntilEvent <= 14 && daysUntilEvent > 7)
-                {
-                    score += 2;
-                    Console.WriteLine($"Event '{ev.Title}' is within 14 days (less preferred): +2");
-                }
-                // Beyond 14 days = no bonus
+                score += NearTermScore(ev.Title, daysUntilEvent);
             }
             else if (userPreferredRange == "mid-term")
             {
                 // User prefers mid-term events (1-4 weeks)
-                if (daysUntilEvent <= 7 && daysUntilEvent >= 0)
-                {
-                    score += 4;
-                    Console.WriteLine($"Event '{ev.Title}' is within 7 days (user prefers mid-term): +4");
-                }
-                else if (daysUntilEvent <= 14 && daysUntilEvent > 7)
-                {
-                    score += 6;
-                    Console.WriteLine($"Event '{ev.Title}' is within 14 days (user prefers mid-term): +6");
-                }
-                else if (daysUntilEvent <= 30 && daysUntilEvent > 14)
-                {
-                    score += 4;
-                    Console.WriteLine($"Event '{ev.Title}' is within 30 days (user prefers mid-term): +4");
-                }
-                else if (daysUntilEvent <= 60 && daysUntilEvent > 30)
-                {
-                    score += 1;
-                    Console.WriteLine($"Event '{ev.Title}' is within 60 days (less preferred): +1");
-                }
+                score += MidTermScore(ev.Title, daysUntilEvent);
             }
             else if (userPreferredRange == "far-term")
             {
                 // User prefers far-term events (1+ months)
-                if (daysUntilEvent <= 14 && daysUntilEvent >= 0)
-                {
-                    score += 2;
-                    Console.WriteLine($"Event '{ev.Title}' is within 14 days (user prefers far-term): +2");
-                }
-                else if (daysUntilEvent <= 30 && daysUntilEvent > 14)
-                {
-                    score += 4;
-                    Console.WriteLine($"Event '{ev.Title}' is within 30 days (user prefers far-term): +4");
-                }
-                else if (daysUntilEvent <= 60 && daysUntilEvent > 30)
-                {
-                    score += 6;
-                    Console.WriteLine($"Event '{ev.Title}' is within 60 days (user prefers far-term): +6");
-                }
-                else if (daysUntilEvent > 60)
-                {
-                    score += 4;
-                    Console.WriteLine($"Event '{ev.Title}' is 60+ days (user prefers far-term): +4");
-                }
+                score += FarTermScore(ev.Title, daysUntilEvent);
             }
             else
             {
-                // No preference data (use default scoring)
-                if (daysUntilEvent <= 3 && daysUntilEvent >= 0)
-                {
-                    score += 7;
-                    Console.WriteLine($"Event '{ev.Title}' is within 3 days (default scoring): +7");
-                }
-                else if (daysUntilEvent <= 7 && daysUntilEvent > 3)
-                {
-                    score += 5;
-                    Console.WriteLine($"Event '{ev.Title}' is within 7 days (default scoring): +5");
-                }
-                else if (daysUntilEvent <= 14 && daysUntilEvent > 7)
-                {
-                    score += 3;
-                    Console.WriteLine($"Event '{ev.Title}' is within 14 days (default scoring): +3");
-                }
-                else if (daysUntilEvent <= 30 && daysUntilEvent > 14)
-                {
-                    score += 1;
-                    Console.WriteLine($"Event '{ev.Title}' is within 30 days (default scoring): +1");
-                }
+                // Default scoring
+                score += DefaultScore(ev.Title, daysUntilEvent);
             }
 
             return score;
         }
 
-        // HELPER METHODS
+        // Determine category score (0-10 points)
+        private int CategoryScore(EventModel ev, SearchPatternAnalysis analysis)
+        {
+            if (analysis.CategoryFrequency.Count > 0)
+            {
+                // Get list of categories by frequency
+                var sortedCategories = analysis.CategoryFrequency
+                    .OrderByDescending(x => x.Value)
+                    .Select(x => x.Key)
+                    .ToList();
+
+                // Check if event category matches user's top categories
+                if (sortedCategories.Count > 0 && ev.Category == sortedCategories[0])
+                {
+                    // most searched category = 10 points
+                    Console.WriteLine($"Event '{ev.Title}' matched top category '{ev.Category}': +10");
+                    return 10;
+                }
+                else if (sortedCategories.Count > 1 && ev.Category == sortedCategories[1])
+                {
+                    // 2ND most searched category = 8 points
+                    Console.WriteLine($"Event '{ev.Title}' matched 2nd category '{ev.Category}': +8");
+                    return 8;
+                }
+                else if (sortedCategories.Count > 2 && ev.Category == sortedCategories[2])
+                {
+                    // 3RD most searched category = 6 points
+                    Console.WriteLine($"Event '{ev.Title}' matched 3rd category '{ev.Category}': +6");
+                    return 6;
+                }
+                else if (analysis.AllSearchedCategories.Contains(ev.Category))
+                {
+                    // Category appears in search history but not top 3 = 4 points
+                    Console.WriteLine($"Event '{ev.Title}' matched searched category '{ev.Category}': +4");
+                    return 4;
+                }
+            }
+
+            return 0;
+        }
+
+        // Determine month preference score (0-4 points)
+        private int MonthScore(EventModel ev, SearchPatternAnalysis analysis)
+        {
+            int eventMonth = ev.Date.Month;
+
+            if (analysis.MonthPreferences.Count > 0)
+            {
+                // Get the most frequently searched month
+                var topMonth = analysis.MonthPreferences.OrderByDescending(x => x.Value).First().Key;
+
+                if (eventMonth == topMonth)
+                {
+                    // Event in most-searched month = 4 points
+                    Console.WriteLine($"Event '{ev.Title}' is in top month ({GetMonthName(eventMonth)}): +4");
+                    return 4;
+                }
+                else if (analysis.MonthPreferences.ContainsKey(eventMonth))
+                {
+                    // Event in a month that was searched = 2 points
+                    Console.WriteLine($"Event '{ev.Title}' is in searched month ({GetMonthName(eventMonth)}): +2");
+                    return 2;
+                }
+            }
+
+            return 0;
+        }
+
+        // Determine near-term score
+        private int NearTermScore(string eventTitle, int daysUntilEvent)
+        {
+            if (daysUntilEvent <= 3 && daysUntilEvent >= 0)
+            {
+                Console.WriteLine($"Event '{eventTitle}' is within 3 days (user prefers near-term): +7");
+                return 7;
+            }
+            else if (daysUntilEvent <= 7 && daysUntilEvent > 3)
+            {
+                Console.WriteLine($"Event '{eventTitle}' is within 7 days (user prefers near-term): +5");
+                return 5;
+            }
+            else if (daysUntilEvent <= 14 && daysUntilEvent > 7)
+            {
+                Console.WriteLine($"Event '{eventTitle}' is within 14 days (less preferred): +2");
+                return 2;
+            }
+
+            // Beyond 14 days = no points
+            return 0;
+        }
+
+        // Determine mid-term score
+        private int MidTermScore(string eventTitle, int daysUntilEvent)
+        {
+            if (daysUntilEvent <= 7 && daysUntilEvent >= 0)
+            {
+                Console.WriteLine($"Event '{eventTitle}' is within 7 days (user prefers mid-term): +4");
+                return 4;
+            }
+            else if (daysUntilEvent <= 14 && daysUntilEvent > 7)
+            {
+                Console.WriteLine($"Event '{eventTitle}' is within 14 days (user prefers mid-term): +6");
+                return 6;
+            }
+            else if (daysUntilEvent <= 30 && daysUntilEvent > 14)
+            {
+                Console.WriteLine($"Event '{eventTitle}' is within 30 days (user prefers mid-term): +4");
+                return 4;
+            }
+            else if (daysUntilEvent <= 60 && daysUntilEvent > 30)
+            {
+                Console.WriteLine($"Event '{eventTitle}' is within 60 days (less preferred): +1");
+                return 1;
+            }
+
+            return 0;
+        }
+
+        // Determine far-term preference score
+        private int FarTermScore(string eventTitle, int daysUntilEvent)
+        {
+            if (daysUntilEvent <= 14 && daysUntilEvent >= 0)
+            {
+                Console.WriteLine($"Event '{eventTitle}' is within 14 days (user prefers far-term): +2");
+                return 2;
+            }
+            else if (daysUntilEvent <= 30 && daysUntilEvent > 14)
+            {
+                Console.WriteLine($"Event '{eventTitle}' is within 30 days (user prefers far-term): +4");
+                return 4;
+            }
+            else if (daysUntilEvent <= 60 && daysUntilEvent > 30)
+            {
+                Console.WriteLine($"Event '{eventTitle}' is within 60 days (user prefers far-term): +6");
+                return 6;
+            }
+            else if (daysUntilEvent > 60)
+            {
+                Console.WriteLine($"Event '{eventTitle}' is 60+ days (user prefers far-term): +4");
+                return 4;
+            }
+
+            return 0;
+        }
+
+        // Determine default score
+        private int DefaultScore(string eventTitle, int daysUntilEvent)
+        {
+            if (daysUntilEvent <= 3 && daysUntilEvent >= 0)
+            {
+                Console.WriteLine($"Event '{eventTitle}' is within 3 days (default scoring): +7");
+                return 7;
+            }
+            else if (daysUntilEvent <= 7 && daysUntilEvent > 3)
+            {
+                Console.WriteLine($"Event '{eventTitle}' is within 7 days (default scoring): +5");
+                return 5;
+            }
+            else if (daysUntilEvent <= 14 && daysUntilEvent > 7)
+            {
+                Console.WriteLine($"Event '{eventTitle}' is within 14 days (default scoring): +3");
+                return 3;
+            }
+            else if (daysUntilEvent <= 30 && daysUntilEvent > 14)
+            {
+                Console.WriteLine($"Event '{eventTitle}' is within 30 days (default scoring): +1");
+                return 1;
+            }
+
+            return 0;
+        }
 
         // Convert month number to name
         private string GetMonthName(int month)
