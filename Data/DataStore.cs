@@ -39,7 +39,7 @@ namespace ST10296167_PROG7312_POE.Data
             Console.WriteLine("Added to search to search history");
 
             // Limit queue size
-            if(SearchHistory.Count > 10)
+            if(SearchHistory.Count > 5)
             {
                 SearchHistory.Dequeue();
             }

@@ -262,8 +262,8 @@ namespace ST10296167_PROG7312_POE.Services.Event
                 }
                 else if (search.StartDate.HasValue || search.EndDate.HasValue)
                 {
-                    // Assume near-term if only one date is searched
-                    IncrementDictionary(analysis.DayRangePreferences, "near-term");
+                    // Assume mid-term if only one date is searched
+                    IncrementDictionary(analysis.DayRangePreferences, "mid-term");
                 }
             }
 
@@ -286,7 +286,7 @@ namespace ST10296167_PROG7312_POE.Services.Event
             // MONTH PREFERENCE SCORING (0-4 points)
             score += MonthScore(ev, analysis);
 
-            // DAY RANGE / PROXIMITY SCORING (0-7 points)
+            // DAY RANGE / PROXIMITY SCORING (0-4 points)
 
             // Calculate days between today and event date
             int daysUntilEvent = (int)(eventDateTime.Date - today.Date).TotalDays;
@@ -392,17 +392,17 @@ namespace ST10296167_PROG7312_POE.Services.Event
             if (daysUntilEvent <= 3 && daysUntilEvent >= 0)
             {
                 Console.WriteLine($"Event '{eventTitle}' is within 3 days (user prefers near-term): +7");
-                return 7;
+                return 4;
             }
             else if (daysUntilEvent <= 7 && daysUntilEvent > 3)
             {
                 Console.WriteLine($"Event '{eventTitle}' is within 7 days (user prefers near-term): +5");
-                return 5;
+                return 3;
             }
             else if (daysUntilEvent <= 14 && daysUntilEvent > 7)
             {
                 Console.WriteLine($"Event '{eventTitle}' is within 14 days (less preferred): +2");
-                return 2;
+                return 1;
             }
 
             // Beyond 14 days = no points
@@ -415,17 +415,17 @@ namespace ST10296167_PROG7312_POE.Services.Event
             if (daysUntilEvent <= 7 && daysUntilEvent >= 0)
             {
                 Console.WriteLine($"Event '{eventTitle}' is within 7 days (user prefers mid-term): +4");
-                return 4;
+                return 3;
             }
             else if (daysUntilEvent <= 14 && daysUntilEvent > 7)
             {
                 Console.WriteLine($"Event '{eventTitle}' is within 14 days (user prefers mid-term): +6");
-                return 6;
+                return 4;
             }
             else if (daysUntilEvent <= 30 && daysUntilEvent > 14)
             {
                 Console.WriteLine($"Event '{eventTitle}' is within 30 days (user prefers mid-term): +4");
-                return 4;
+                return 2;
             }
             else if (daysUntilEvent <= 60 && daysUntilEvent > 30)
             {
@@ -442,22 +442,22 @@ namespace ST10296167_PROG7312_POE.Services.Event
             if (daysUntilEvent <= 14 && daysUntilEvent >= 0)
             {
                 Console.WriteLine($"Event '{eventTitle}' is within 14 days (user prefers far-term): +2");
-                return 2;
+                return 1;
             }
             else if (daysUntilEvent <= 30 && daysUntilEvent > 14)
             {
                 Console.WriteLine($"Event '{eventTitle}' is within 30 days (user prefers far-term): +4");
-                return 4;
+                return 2;
             }
             else if (daysUntilEvent <= 60 && daysUntilEvent > 30)
             {
                 Console.WriteLine($"Event '{eventTitle}' is within 60 days (user prefers far-term): +6");
-                return 6;
+                return 4;
             }
             else if (daysUntilEvent > 60)
             {
                 Console.WriteLine($"Event '{eventTitle}' is 60+ days (user prefers far-term): +4");
-                return 4;
+                return 2;
             }
 
             return 0;
@@ -469,17 +469,17 @@ namespace ST10296167_PROG7312_POE.Services.Event
             if (daysUntilEvent <= 3 && daysUntilEvent >= 0)
             {
                 Console.WriteLine($"Event '{eventTitle}' is within 3 days (default scoring): +7");
-                return 7;
+                return 4;
             }
             else if (daysUntilEvent <= 7 && daysUntilEvent > 3)
             {
                 Console.WriteLine($"Event '{eventTitle}' is within 7 days (default scoring): +5");
-                return 5;
+                return 3;
             }
             else if (daysUntilEvent <= 14 && daysUntilEvent > 7)
             {
                 Console.WriteLine($"Event '{eventTitle}' is within 14 days (default scoring): +3");
-                return 3;
+                return 2;
             }
             else if (daysUntilEvent <= 30 && daysUntilEvent > 14)
             {

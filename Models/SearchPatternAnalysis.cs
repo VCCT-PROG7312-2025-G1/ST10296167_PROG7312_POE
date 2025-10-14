@@ -22,7 +22,9 @@
         public string? GetTopCategory()
         {
             if (CategoryFrequency.Count == 0)
+            {
                 return null;
+            }
 
             return CategoryFrequency.OrderByDescending(x => x.Value).First().Key;
         }
@@ -31,7 +33,9 @@
         public int? GetTopMonth()
         {
             if (MonthPreferences.Count == 0)
+            {
                 return null;
+            }
 
             return MonthPreferences.OrderByDescending(x => x.Value).First().Key;
         }
@@ -40,12 +44,14 @@
         public string? GetPreferredRange()
         {
             if (DayRangePreferences.Count == 0)
+            {
                 return null;
+            }
 
             return DayRangePreferences.OrderByDescending(x => x.Value).First().Key;
         }
 
-        // Returns a string representation of the analysis for logging/debugging (Claude helped me create this).
+        // Returns a string representation of the analysis for logging/debugging (Claude helped me create this for logging / debugging).
         public override string ToString()
         {
             var parts = new List<string>();
