@@ -1,11 +1,17 @@
 ﻿@model Dictionary<int, ST10296167_PROG7312_POE.Models.Issue>
 
 <head>
+    <style>
+        #logo {
+            display: none;
+        }
+    </style>
 
 </head>
 
 <body data-view-file-url="@Url.Action("ViewFile", "Report")"
       data-download-file-url="@Url.Action("DownloadFile", "Report")">
+
     <!-- Back Button -->
     <a asp-action="ReportMenu" asp-controller="Report"
        class="btn btn-secondary position-absolute"
