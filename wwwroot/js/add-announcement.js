@@ -1,4 +1,5 @@
 $(document).ready(function () {
+
   // --- Input Validation ---
   var currentError = null;
   var fields = ["Title", "Category", "Content"];

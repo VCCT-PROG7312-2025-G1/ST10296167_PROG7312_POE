@@ -20,6 +20,7 @@ namespace ST10296167_PROG7312_POE.Services.Announcement
 
         // Methods
         //------------------------------------------------------------------------------------------------------------------------------------------//
+        // Get recent announcements from the recent announcements stack
         public Task<List<AnnouncementModel>> GetRecentAnnouncementsAsync(int count)
         {
             var recentAnnouncements = _dataStore.RecentAnnouncements
@@ -29,12 +30,14 @@ namespace ST10296167_PROG7312_POE.Services.Announcement
             return Task.FromResult(recentAnnouncements);
         }
 
+        // Get all announcements from the recent announcements stack
         public Task<List<AnnouncementModel>> GetAllAnnouncementsAsync()
         {
             var allAnnouncements = _dataStore.RecentAnnouncements.ToList();
             return Task.FromResult(allAnnouncements);
         }
 
+        // Add a new announcement to the database and the recent announcements stack
         public async Task<bool> AddAnnouncementAsync(AnnouncementModel announcement)
         {
             try
@@ -53,8 +56,8 @@ namespace ST10296167_PROG7312_POE.Services.Announcement
             {
                 return false;
             }
-            //------------------------------------------------------------------------------------------------------------------------------------------//
         }
+        //------------------------------------------------------------------------------------------------------------------------------------------//
     }
 }
 //--------------------------------------------------------X END OF FILE X-------------------------------------------------------------------//

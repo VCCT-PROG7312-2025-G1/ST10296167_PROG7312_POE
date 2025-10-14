@@ -18,6 +18,7 @@ namespace ST10296167_PROG7312_POE.Repository.Announcement
 
         // Methods
         //------------------------------------------------------------------------------------------------------------------------------------------//
+        // Add announcement to the database and return the added announcement
         public async Task<AnnouncementModel> AddAsync(AnnouncementModel announcement)
         {
             _context.Announcements.Add(announcement);
@@ -26,12 +27,15 @@ namespace ST10296167_PROG7312_POE.Repository.Announcement
             return announcement;
 
         }
+
+        // Get all announcements ordered by creation date
         public async Task<List<AnnouncementModel>> GetAllAnnouncementsAsync()
         {
             return await _context.Announcements
                 .OrderBy(a => a.CreatedAt)
                 .ToListAsync();
         }
+
         public async Task<AnnouncementModel> GetByIdAsync(int id)
         {
             throw new NotImplementedException();

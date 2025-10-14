@@ -45,7 +45,7 @@
             return DayRangePreferences.OrderByDescending(x => x.Value).First().Key;
         }
 
-        // Returns a string representation of the analysis for logging/debugging.
+        // Returns a string representation of the analysis for logging/debugging (Claude helped me create this).
         public override string ToString()
         {
             var parts = new List<string>();

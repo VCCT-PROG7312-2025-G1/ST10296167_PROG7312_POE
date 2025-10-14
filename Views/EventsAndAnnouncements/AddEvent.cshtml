@@ -41,7 +41,7 @@
                 <form asp-action="AddEvent" method="post">
                     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-                    <!-- Title Row -->
+                    <!-- Title -->
                     <div class="row">
                         <div class="col-md-6">
                             <label class="form-label fw-bold d-block text-start">Title</label>
@@ -55,9 +55,8 @@
                         </div>
                     </div>
 
-                    <!-- 2x2 Grid Row -->
                     <div class="row">
-                        <!-- Left Column: Location & Category -->
+                        <!-- Left Column -->
                         <div class="col-md-6">
                             <!-- Location -->
                             <label class="form-label fw-bold d-block text-start">Location</label>
@@ -89,7 +88,7 @@
                             <span asp-validation-for="Category" class="invalid-feedback"></span>
                         </div>
 
-                        <!-- Right Column: Date & Time -->
+                        <!-- Right Column -->
                         <div class="col-md-6">
                             <!-- Date -->
                             <label class="form-label fw-bold d-block text-start">Date</label>

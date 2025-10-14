@@ -21,13 +21,13 @@ namespace ST10296167_PROG7312_POE.Repository.User
 
         // Methods
         //------------------------------------------------------------------------------------------------------------------------------------------//
-        // This method retrieves a user from the db based on their email
+        // Retrieve an employee from the database based on their email
         public async Task<Models.User> GetUserByEmailAsync(string email)
         {
             return await _context.Users.SingleOrDefaultAsync(x => x.Email == email);
         }
 
-        // This method adds a new user to the db
+        // Add a new employee to the database
         public async Task<IdentityResult> CreateUserAsync(Models.User user, string password)
         {
             var result = await _userManager.CreateAsync(user, password);

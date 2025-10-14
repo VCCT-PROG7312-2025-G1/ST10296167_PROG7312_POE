@@ -1,4 +1,6 @@
-﻿* {
+﻿/* Used Claude to help create the necessary css for the AllAnnouncements view according to my specifications */
+
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -9,7 +11,6 @@ body {
     color: #212529;
 }
 
-/* Page Header */
 .all-announcements-header {
     background: none;
     color: #212529;
@@ -43,7 +44,6 @@ body {
     line-height: 1.4;
 }
 
-/* Main Container */
 .all-announcements-container {
     max-width: 1400px;
     margin: 0 auto;
@@ -52,7 +52,6 @@ body {
     justify-content: center;
 }
 
-/* Announcements Grid Section */
 .announcements-grid-section {
     width: 100%;
     background: white;
@@ -63,7 +62,6 @@ body {
     padding: 2rem;
 }
 
-/* Announcements Grid */
 .announcements-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -71,7 +69,6 @@ body {
     width: 100%;
 }
 
-/* Announcement Card */
 .announcement-card {
     background: white;
     border: 2px solid #e9ecef;
@@ -184,7 +181,6 @@ body {
         color: #333;
     }
 
-/* Empty State */
 .empty-state {
     text-align: center;
     padding: 4rem 2rem;
@@ -325,7 +321,6 @@ body {
             border-color: #545b62;
         }
 
-/* Responsive Design */
 @media (max-width: 1400px) {
     .announcements-grid {
         grid-template-columns: repeat(3, 1fr);

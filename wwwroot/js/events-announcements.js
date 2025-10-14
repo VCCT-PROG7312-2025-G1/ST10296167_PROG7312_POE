@@ -1,4 +1,4 @@
-// Events & Announcements Page JavaScript
+// Used Claude to help write the JavaScript for EventsAndAnnouncements extra frontend functionality
 
 document.addEventListener("DOMContentLoaded", function () {
     initializeEventInteractions();

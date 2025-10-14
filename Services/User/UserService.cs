@@ -1,7 +1,6 @@
 using ST10296167_PROG7312_POE.Models;
 using ST10296167_PROG7312_POE.Repository.User;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ST10296167_PROG7312_POE.Services.User
 {
@@ -21,7 +20,7 @@ namespace ST10296167_PROG7312_POE.Services.User
         
         // Methods
         //------------------------------------------------------------------------------------------------------------------------------------------//
-        // This method attempts to log in a user based on the entered email and password 
+        // Log in a user based on the entered email and password 
         public async Task<bool> LoginUserAsync(Login login)
         {
             var result = await _signInManager.PasswordSignInAsync(login.Email, login.Password, isPersistent: false, lockoutOnFailure: false);
@@ -35,7 +34,7 @@ namespace ST10296167_PROG7312_POE.Services.User
             }
         }
 
-        // This methods logs the user out of their account 
+        // Logs a user out of their account 
         public async Task LogoutAsync()
         {
             await _signInManager.SignOutAsync();

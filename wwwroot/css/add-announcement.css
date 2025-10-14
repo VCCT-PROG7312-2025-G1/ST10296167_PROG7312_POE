@@ -13,9 +13,8 @@ h2 {
   transition: box-shadow 0.3s ease;
 }
 
-/* Make select (category) input match the height of other form controls */
 .form-select {
-  height: calc(3.5rem + 2px); /* Match .form-control height in Bootstrap 5 */
+  height: calc(3.5rem + 2px); 
   padding-top: 1rem;
   padding-bottom: 1rem;
   font-size: 1rem;

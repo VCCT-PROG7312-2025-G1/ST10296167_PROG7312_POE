@@ -8,7 +8,7 @@
 
         public List<Event> RecommendedEvents { get; set; } = new List<Event>();
 
-        public List<String> Categories { get; set; } = new List<String>();
+        public List<string> Categories { get; set; } = new List<string>();
 
         SearchQuery CurrentSearch { get; set; } = new SearchQuery();
 
@@ -18,3 +18,4 @@
         public DateTime? EndDate { get; set; }
     }
 }
+//--------------------------------------------------------X END OF FILE X-------------------------------------------------------------------//

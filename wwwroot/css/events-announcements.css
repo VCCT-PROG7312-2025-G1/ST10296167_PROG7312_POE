@@ -1,3 +1,5 @@
+/* Used Claude to help create the necessary css for the EventsAndAnnouncements view according to my specifications */
+
 .all-events-section-header {
     display: flex;
     align-items: center;
@@ -33,7 +35,6 @@ body {
     color: #212529;
 }
 
-/* Page Header */
 .events-announcements-header {
     background: none;
     color: #212529;
@@ -67,7 +68,6 @@ body {
     line-height: 1.4;
 }
 
-/* Main Container */
 .events-announcements-container {
     max-width: 1400px;
     margin: 0 auto;
@@ -77,7 +77,6 @@ body {
     gap: 2rem;
 }
 
-/* Announcements Section */
 .announcements-section {
     width: 100%;
 }
@@ -282,7 +281,6 @@ body {
         text-decoration: underline;
     }
 
-/* Scrollbar Styling */
 .announcements-card-body::-webkit-scrollbar {
     height: 8px;
 }
@@ -301,7 +299,6 @@ body {
         background: #a1a1a1;
     }
 
-/* Events Section */
 .events-section {
     width: 100%;
     max-width: calc((100% / 3) * 3 + 3rem);
@@ -359,7 +356,6 @@ body {
     overflow-y: auto;
 }
 
-/* Filter Section */
 .filter-section-embedded {
     background-color: #f8f9fa;
     border: 1px solid #e9ecef;
@@ -424,7 +420,6 @@ body {
         gap: 1.5rem;
     }
 
-/* Normal Events */
 .normal-events-section-embedded {
     background: #f0f4ff;
     border: 1px solid #c7d2fe;
@@ -465,7 +460,6 @@ body {
         text-decoration: underline;
     }
 
-/* Events Grid - General fallback */
 .events-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -558,7 +552,6 @@ body {
         text-decoration: underline;
     }
 
-/* Empty States */
 .empty-state {
     text-align: center;
     padding: 2rem;
@@ -593,7 +586,6 @@ body {
     color: #6c757d !important;
 }
 
-/* Responsive Design */
 @media (max-width: 1024px) {
     .main-heading {
         font-size: 2rem;
@@ -747,7 +739,6 @@ body {
     }
 }
 
-/* Modal Styling */
 .modal-content {
     border: none;
     border-radius: 10px;
@@ -870,7 +861,6 @@ body {
             border-color: #545b62;
         }
 
-/* Responsive Modal */
 @media (max-width: 576px) {
     .modal-dialog {
         margin: 0.5rem;

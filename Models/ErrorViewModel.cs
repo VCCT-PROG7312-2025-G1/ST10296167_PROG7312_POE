@@ -7,3 +7,4 @@ namespace ST10296167_PROG7312_POE.Models
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
     }
 }
+//--------------------------------------------------------X END OF FILE X-------------------------------------------------------------------//

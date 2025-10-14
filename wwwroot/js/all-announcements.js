@@ -1,4 +1,4 @@
-﻿// All Announcements Page JavaScript
+﻿// Used Claude to help write JavaScript for the modal and read more frontend functionality
 
 document.addEventListener("DOMContentLoaded", function () {
     initializeModalFunctionality();

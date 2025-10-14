@@ -23,10 +23,17 @@ namespace ST10296167_PROG7312_POE.Controllers
         {
             return View();
         }
+
+        [Authorize]
+        public IActionResult Dashboard()
+        {
+            return View();
+        }
         //------------------------------------------------------------------------------------------------------------------------------------------//
 
         // Methods
         //------------------------------------------------------------------------------------------------------------------------------------------//
+        // Employee login
         [HttpPost]
         public async Task<IActionResult> LoginUser(Login login)
         {
@@ -46,12 +53,7 @@ namespace ST10296167_PROG7312_POE.Controllers
             return View("Login", login);
         }
 
-        [Authorize]
-        public IActionResult Dashboard()
-        {
-            return View();
-        }
-
+        // Logout employee
         [Authorize]
         public async Task<IActionResult> Logout()
         {

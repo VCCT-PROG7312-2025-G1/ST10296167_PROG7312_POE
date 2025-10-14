@@ -7,6 +7,8 @@ namespace ST10296167_PROG7312_POE.Data
         private readonly string _uploadFolder;
         private int nextIssueId = 1;
         private int nextFileId = 1;
+
+        // Data Structures
         public Dictionary<int, Issue> ReportedIssues { get; set; } = new Dictionary<int, Issue>();
         public LinkedList<Feedback> UserFeedback { get; set; } = new LinkedList<Feedback>();
         public SortedDictionary<DateTime, List<Event>> EventsByDate { get; set; } = new SortedDictionary<DateTime, List<Event>>();

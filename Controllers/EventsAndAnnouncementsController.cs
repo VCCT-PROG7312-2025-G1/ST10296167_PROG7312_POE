@@ -24,6 +24,7 @@ namespace ST10296167_PROG7312_POE.Controllers
 
         // Views
         //------------------------------------------------------------------------------------------------------------------------------------------//
+        // Display relevant events and announcements by checking search filters and returning a view model
         public async Task<IActionResult> EventsAndAnnouncements(string? category, DateTime? startDate, DateTime? endDate, string? search)
         {
             // If employee, redirect to dashboard
@@ -37,7 +38,7 @@ namespace ST10296167_PROG7312_POE.Controllers
             bool noSearchFilters = string.IsNullOrEmpty(category) && !startDate.HasValue && !endDate.HasValue;
             bool noSearch = !userSearched || noSearchFilters;
 
-            // Populate the view model
+            // Populate view model
             if (noSearch)
             {
                 Console.WriteLine("NO SEARCH HIT");
@@ -70,6 +71,7 @@ namespace ST10296167_PROG7312_POE.Controllers
             }
         }
         
+        // Display add event view
         public IActionResult AddEvent()
         {
             // If not employee, redirect to home
@@ -81,6 +83,7 @@ namespace ST10296167_PROG7312_POE.Controllers
             return View();
         }
 
+        // Display add announcement view
         public IActionResult AddAnnouncement()
         {
             // If not employee, redirect to home
@@ -92,6 +95,7 @@ namespace ST10296167_PROG7312_POE.Controllers
             return View();
         }
 
+        // Display all announcements view
         public async Task<IActionResult> AllAnnouncements()
         {
             // If employee, redirect to dashboard
@@ -100,6 +104,7 @@ namespace ST10296167_PROG7312_POE.Controllers
                 return RedirectToAction("Dashboard", "User");
             }
 
+            // Populate view model
             var viewModel = new EventsAnnouncementsViewModel
             {
                 Announcements = await _announcementService.GetAllAnnouncementsAsync(),
@@ -111,15 +116,18 @@ namespace ST10296167_PROG7312_POE.Controllers
 
         // Methods
         //------------------------------------------------------------------------------------------------------------------------------------------//
+        // Add event to database and in-memory data structure
         [HttpPost]
         public async Task<IActionResult> AddEvent(Event newEvent)
         {
+            // Check for input errors
             if (!ModelState.IsValid)
             {
                 Console.WriteLine("Modelstate not valid");
                 return View("AddEvent", newEvent);
             }
 
+            // Add event
             var result = await _eventService.AddEventAsync(newEvent);
 
             if (result)
@@ -133,6 +141,7 @@ namespace ST10296167_PROG7312_POE.Controllers
             }
         }
 
+        // Add announcement to database and in-memory data structure
         [HttpPost]
         public async Task<IActionResult> AddAnnouncement(Announcement announcement)
         {
@@ -155,3 +164,4 @@ namespace ST10296167_PROG7312_POE.Controllers
         //------------------------------------------------------------------------------------------------------------------------------------------//
     }
 }
+//--------------------------------------------------------X END OF FILE X-------------------------------------------------------------------//
