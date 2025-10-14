@@ -28,6 +28,13 @@ namespace ST10296167_PROG7312_POE.Services.Announcement
 
             return Task.FromResult(recentAnnouncements);
         }
+
+        public Task<List<AnnouncementModel>> GetAllAnnouncementsAsync()
+        {
+            var allAnnouncements = _dataStore.RecentAnnouncements.ToList();
+            return Task.FromResult(allAnnouncements);
+        }
+
         public async Task<bool> AddAnnouncementAsync(AnnouncementModel announcement)
         {
             try

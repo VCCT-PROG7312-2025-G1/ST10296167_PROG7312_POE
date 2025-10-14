@@ -3,6 +3,12 @@
 
 <link href="~/css/events-announcements.css" rel="stylesheet" />
 
+<!-- Back Button -->
+<a asp-action="Index" asp-controller="Home"
+   class="btn btn-secondary position-absolute"
+   style="top: 100px; left: 10px; z-index: 1000;">
+    &larr; Back
+</a>
 
 <!-- Page Header -->
 <header class="events-announcements-header text-center">
@@ -19,6 +25,9 @@
                     <i class="fas fa-bullhorn"></i>
                     Recent Announcements
                 </h3>
+                <a href="@Url.Action("AllAnnouncements", "EventsAndAnnouncements")" class="view-all-link">
+                    View All <i class="fas fa-arrow-right ms-1"></i>
+                </a>
             </div>
             <div class="announcements-card-body">
                 @if (Model.Announcements != null && Model.Announcements.Any())
@@ -208,7 +217,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -240,7 +249,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

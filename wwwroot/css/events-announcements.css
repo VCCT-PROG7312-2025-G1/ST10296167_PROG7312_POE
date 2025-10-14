@@ -96,6 +96,10 @@ body {
     background: #ffecd4;
     border-bottom: 1px solid #ffd4a3;
     padding: 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
 }
 
     .announcements-card-header h3 {
@@ -106,6 +110,36 @@ body {
         display: flex;
         align-items: center;
         gap: 0.5rem;
+        flex: 1;
+    }
+
+.view-all-link {
+    color: #495057;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0.4rem 0.75rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+    .view-all-link:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+        color: #212529;
+        text-decoration: none;
+    }
+
+    .view-all-link i {
+        font-size: 0.75rem;
+        transition: transform 0.3s ease;
+    }
+
+    .view-all-link:hover i {
+        transform: translateX(2px);
     }
 
 .announcements-card-body {
@@ -375,7 +409,6 @@ body {
     gap: 0.5rem;
 }
 
-
 /* Recommended Events */
 .recommended-section-embedded {
     background: #f0f8f5;
@@ -385,11 +418,11 @@ body {
     margin-bottom: 1.5rem;
 }
 
-.recommended-section-embedded .events-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-}
+    .recommended-section-embedded .events-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
 
 /* Normal Events */
 .normal-events-section-embedded {
@@ -400,11 +433,11 @@ body {
     margin-bottom: 1.5rem;
 }
 
-.normal-events-section-embedded .events-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-}
+    .normal-events-section-embedded .events-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
 
 .section-divider-small {
     display: flex;
@@ -601,7 +634,6 @@ body {
         width: 100%;
     }
 
-
     .events-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 1rem;
@@ -663,7 +695,6 @@ body {
         width: 100%;
     }
 
-
     .events-grid {
         grid-template-columns: 1fr;
         gap: 1rem;
@@ -703,6 +734,16 @@ body {
     .events-count {
         margin-left: 0;
         margin-top: 0.5rem;
+    }
+
+    .announcements-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .view-all-link {
+        width: 100%;
+        justify-content: flex-start;
     }
 }
 

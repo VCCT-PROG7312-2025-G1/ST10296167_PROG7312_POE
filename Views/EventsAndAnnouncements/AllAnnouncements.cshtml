@@ -1,0 +1,83 @@
+﻿@model ST10296167_PROG7312_POE.Models.EventsAnnouncementsViewModel
+
+<link href="~/css/all-announcements.css" rel="stylesheet" />
+
+
+<!-- Back Button -->
+<a asp-action="EventsAndAnnouncements" asp-controller="EventsAndAnnouncements"
+   class="btn btn-secondary position-absolute"
+   style="top: 100px; left: 10px; z-index: 1000;">
+    &larr; Back
+</a>
+
+<!-- Page Header -->
+<header class="all-announcements-header text-center">
+    <h1 class="main-heading">All Announcements</h1>
+    <p class="sub-text">Stay updated with all community announcements</p>
+</header>
+
+<div class="all-announcements-container">
+    <!-- All Announcements Grid Section -->
+    <div class="announcements-grid-section">
+        @if (Model.Announcements != null && Model.Announcements.Any())
+        {
+            <div class="announcements-grid" id="announcementsGrid">
+                @foreach (var announcement in Model.Announcements)
+                {
+                    <div class="announcement-card" data-category="@announcement.Category" data-full-content="@announcement.Content">
+                        <div class="announcement-header">
+                            <span class="announcement-category">@announcement.Category</span>
+                            <span class="announcement-date">@announcement.CreatedAt.ToString("MMM dd, yyyy")</span>
+                        </div>
+                        <h5 class="announcement-title">@announcement.Title</h5>
+                        <hr class="announcement-separator" />
+                        <p class="announcement-content">@announcement.Content</p>
+                        <a href="#" class="announcement-read-more">Read Full →</a>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+                <i class="fas fa-info-circle"></i>
+                <h4>No Announcements Available</h4>
+                <p>There are no announcements at this time. Please check back later!</p>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Announcement Details Modal -->
+<div class="modal fade" id="announcementDetailsModal" tabindex="-1" role="dialog" aria-labelledby="announcementModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header modal-header-primary">
+                <h5 class="modal-title" id="announcementModalLabel">
+                    <i class="fas fa-bullhorn me-2"></i>
+                    <span id="announcementModalTitle"></span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-detail-section">
+                    <h6 class="modal-label">Category</h6>
+                    <p id="announcementModalCategory" class="modal-value"></p>
+                </div>
+                <div class="modal-detail-section">
+                    <h6 class="modal-label">Date</h6>
+                    <p id="announcementModalDate" class="modal-value"></p>
+                </div>
+                <div class="modal-detail-section">
+                    <h6 class="modal-label">Content</h6>
+                    <p id="announcementModalContent" class="modal-value"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/all-announcements.js"></script>

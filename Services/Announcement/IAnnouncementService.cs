@@ -5,6 +5,7 @@ namespace ST10296167_PROG7312_POE.Services.Announcement
     public interface IAnnouncementService
     {
         Task<List<AnnouncementModel>> GetRecentAnnouncementsAsync(int count);
+        Task<List<AnnouncementModel>> GetAllAnnouncementsAsync();
         Task<bool> AddAnnouncementAsync(AnnouncementModel announcement);
     }
 }
