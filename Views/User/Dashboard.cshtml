@@ -4,6 +4,16 @@
 
 <body>
 
+    <!-- Success Message -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show success-message position-fixed"
+             style="bottom: 80px; right: 20px; z-index: 1100; max-width: 400px;">
+            <strong>Success!</strong> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
     <div class="text-center mt-5">
         <h1>Employee Dashboard</h1>
         <h4>Add events & announcements</h4>

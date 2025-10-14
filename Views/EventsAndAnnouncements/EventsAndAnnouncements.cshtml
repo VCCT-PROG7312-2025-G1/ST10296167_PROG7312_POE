@@ -91,13 +91,15 @@
                         <div class="filter-group">
                             <label for="startDate">Start Date</label>
                             <input type="date" class="form-control" id="startDate" name="startDate"
-                                   value="@(Model.StartDate?.ToString("yyyy-MM-dd") ?? "")" />
+                                   value="@(Model.StartDate?.ToString("yyyy-MM-dd") ?? "")"
+                                   onfocus="this.showPicker()" onchange="this.blur()" />
                         </div>
 
                         <div class="filter-group">
                             <label for="endDate">End Date</label>
                             <input type="date" class="form-control" id="endDate" name="endDate"
-                                   value="@(Model.EndDate?.ToString("yyyy-MM-dd") ?? "")" />
+                                   value="@(Model.EndDate?.ToString("yyyy-MM-dd") ?? "")"
+                                   onfocus="this.showPicker()" onchange="this.blur()" />
                         </div>
 
                         <div class="filter-buttons">

@@ -132,6 +132,7 @@ namespace ST10296167_PROG7312_POE.Controllers
 
             if (result)
             {
+                TempData["SuccessMessage"] = "Event has been successfully created!";
                 return RedirectToAction("Dashboard", "User");
             }
             else
@@ -153,6 +154,7 @@ namespace ST10296167_PROG7312_POE.Controllers
             var result = await _announcementService.AddAnnouncementAsync(announcement);
             if (result)
             {
+                TempData["SuccessMessage"] = "Announcement has been successfully created!";
                 return RedirectToAction("Dashboard", "User");
             }
             else
