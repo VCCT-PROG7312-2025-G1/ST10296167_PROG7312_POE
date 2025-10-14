@@ -56,7 +56,7 @@ namespace ST10296167_PROG7312_POE.Controllers
         public async Task<IActionResult> Logout()
         {
             await _userService.LogoutAsync();
-            return RedirectToAction("Login", "User");
+            return RedirectToAction("Index", "Home");
         }
         //------------------------------------------------------------------------------------------------------------------------------------------//
     }
