@@ -6,8 +6,12 @@
 
 [https://github.com/VCCT-PROG7312-2025-G1/ST10296167_PROG7312_POE.git](https://github.com/VCCT-PROG7312-2025-G1/ST10296167_PROG7312_POE.git)
 
-### _YouTube Demo Video:_
+### _YouTube Demo VideoS:_
 
+#### Part 2 Video
+[https://youtu.be/tAApxcHLAY8](https://youtu.be/tAApxcHLAY8)
+
+#### Part 1 Video
 [https://youtu.be/iX2-10jpqV0?si=o3jmx8cb9076vzQd](https://youtu.be/iX2-10jpqV0?si=o3jmx8cb9076vzQd)
 
 ---
@@ -63,7 +67,7 @@ The `DataStore` is registered as a singleton in `Program.cs` using `builder.Serv
 
 **Purpose**: Caches the current set of recommended events for quick display.
 
-**Usage**: Generated recommendations from the recommendation engine are stored in this list to avoid recalculating recommendations on every page load. The list is populated by the `RecommendationEngine` class after analyzing search history and scoring available events. Users see these recommendations displayed in a dedicated section on the Events and Announcements page. Implementation can be found in `Services/Event/EventService.cs` and `Services/Recommendation/RecommendationsGenerator.cs`.
+**Usage**: Generated recommendations from the recommendation engine are stored in this list to avoid recalculating recommendations on every page load. The list is populated by the `RecommendationsGenerator` class after analyzing search history and scoring available events. Users see these recommendations displayed in a dedicated section on the Events and Announcements page. Implementation can be found in `Services/Event/EventService.cs` and `Services/Recommendation/RecommendationsGenerator.cs`.
 
 ### Linked List
 
