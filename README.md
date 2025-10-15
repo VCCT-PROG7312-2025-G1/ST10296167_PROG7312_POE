@@ -261,3 +261,41 @@ Employees can submit the form once all required fields are filled in by clicking
 
 #### Logging Out
 Employees can log out of their account at any time by clicking the **Logout** button located at the top right corner of the application.
+
+---
+
+## AI Declaration
+
+### Demo Data Seeding
+
+**Tool:** CoPilot (GPT-5 mini)
+
+**Purpose:**
+
+CoPilot was used to create methods to seed my database with demo data for testing based on my applications models.
+
+### CSS & JavaScript
+
+**Tool:** Claude Sonnet 4.5
+
+**Purpose:**
+
+I workshopped with Claude to get it to help generate the css used for my Events and Announcements View.
+Additioanlly Claude was consulted in order to help me write the necessary JavaScript to smoothen and enhance my applications UX.
+
+### Recommendations 
+
+**Tool:** Claude Sonnet 4.5
+
+**Purpose:**
+
+Claude was used to help me brainstorm and develop the point, proximity, and weight based scoring system used for my recommendation algorithm. 
+Claude was then subsequently used to suggest and help develop improvements to my initial algorithm approach and it helped debug my code with the addition of detailed console logs.
+
+### Events and Recommendations View
+
+**Tool:** Claude Sonnet 4.5
+
+**Purpose:**
+
+Claude was used to help improve the HTML layout of my view in addition to helping me implement the in-page modal popup for event and announcements details.
