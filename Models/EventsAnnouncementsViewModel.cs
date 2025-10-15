@@ -14,8 +14,8 @@
 
         // Selected filters
         public string SelectedCategory { get; set; } = string.Empty;
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
+        public DateOnly? StartDate { get; set; }
+        public DateOnly? EndDate { get; set; }
     }
 }
 //--------------------------------------------------------X END OF FILE X-------------------------------------------------------------------//

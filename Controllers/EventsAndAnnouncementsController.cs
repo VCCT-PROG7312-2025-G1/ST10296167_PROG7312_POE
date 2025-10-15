@@ -45,8 +45,8 @@ namespace ST10296167_PROG7312_POE.Controllers
                 var viewModel = new EventsAnnouncementsViewModel
                 {
                     SelectedCategory = category,
-                    StartDate = startDate,
-                    EndDate = endDate,
+                    StartDate = ToDateOnly(startDate),
+                    EndDate = ToDateOnly(endDate),
                     Events = await _eventService.GetAllEventsAsync(),
                     Announcements = await _announcementService.GetRecentAnnouncementsAsync(10),
                     Categories = await _eventService.GetAllCategoriesAsync(),
@@ -60,8 +60,8 @@ namespace ST10296167_PROG7312_POE.Controllers
                 var viewModel = new EventsAnnouncementsViewModel
                 {
                     SelectedCategory = category,
-                    StartDate = startDate,
-                    EndDate = endDate,
+                    StartDate = ToDateOnly(startDate),
+                    EndDate = ToDateOnly(endDate),
                     Events = await _eventService.SearchEventsAsync(category, startDate, endDate),
                     Announcements = await _announcementService.GetRecentAnnouncementsAsync(10),
                     Categories = await _eventService.GetAllCategoriesAsync(),
@@ -163,6 +163,9 @@ namespace ST10296167_PROG7312_POE.Controllers
                 return View("AddAnnouncement", announcement);
             }
         }
+
+        // Helper
+        private DateOnly? ToDateOnly(DateTime? dt) => dt.HasValue ? DateOnly.FromDateTime(dt.Value) : null;
         //------------------------------------------------------------------------------------------------------------------------------------------//
     }
 }

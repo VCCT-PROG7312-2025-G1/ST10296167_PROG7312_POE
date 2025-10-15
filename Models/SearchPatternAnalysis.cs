@@ -8,15 +8,8 @@
         // All unique categories that appear in search history
         public HashSet<string> AllSearchedCategories { get; set; } = new HashSet<string>();
 
-        // Track how many times each month was searched for
-        public Dictionary<int, int> MonthPreferences { get; set; } = new Dictionary<int, int>();
-
-        // Dictionary tracking what types of date ranges the user typically searches for
-        // Range types:
-        // - "near-term": Searches for events within 1 week (0-7 days)
-        // - "mid-term": Searches for events 1-4 weeks out (8-30 days)
-        // - "far-term": Searches for events 1+ months out (31+ days)
-        public Dictionary<string, int> DayRangePreferences { get; set; } = new Dictionary<string, int>();
+        // Store date ranges from searches with recency weights
+        public List<(DateOnly StartDate, DateOnly EndDate, double Weight)> SearchDateRanges { get; set; } = new List<(DateOnly, DateOnly, double)>();
 
         // Get the most frequently searched category, or null if no categories searched
         public string? GetTopCategory()
@@ -29,27 +22,6 @@
             return CategoryFrequency.OrderByDescending(x => x.Value).First().Key;
         }
 
-        // Get the most frequently searched month (1-12), or null if no months searched
-        public int? GetTopMonth()
-        {
-            if (MonthPreferences.Count == 0)
-            {
-                return null;
-            }
-
-            return MonthPreferences.OrderByDescending(x => x.Value).First().Key;
-        }
-
-        // Get the user's preferred search range type
-        public string? GetPreferredRange()
-        {
-            if (DayRangePreferences.Count == 0)
-            {
-                return null;
-            }
-
-            return DayRangePreferences.OrderByDescending(x => x.Value).First().Key;
-        }
 
         // Returns a string representation of the analysis for logging/debugging (Claude helped me create this for logging / debugging).
         public override string ToString()
@@ -62,22 +34,26 @@
                 parts.Add($"Categories: {categories}");
             }
 
-            if (MonthPreferences.Count > 0)
+            if (SearchDateRanges.Count > 0)
             {
-                var months = string.Join(", ", MonthPreferences.Select(m =>
-                    $"{System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(m.Key)} ({m.Value}x)"));
-                parts.Add($"Months: {months}");
-            }
-
-            if (DayRangePreferences.Count > 0)
-            {
-                var ranges = string.Join(", ", DayRangePreferences.Select(r => $"{r.Key} ({r.Value}x)"));
-                parts.Add($"Ranges: {ranges}");
+                var ranges = string.Join(", ", SearchDateRanges.Select(r =>
+                {
+                    string rangeText;
+                    if (r.StartDate == DateOnly.MinValue)
+                        rangeText = $"until {r.EndDate:MMM dd}";
+                    else if (r.EndDate == DateOnly.MaxValue)
+                        rangeText = $"from {r.StartDate:MMM dd} onwards";
+                    else
+                        rangeText = $"{r.StartDate:MMM dd}-{r.EndDate:MMM dd}";
+                    
+                    return $"{rangeText} (w:{r.Weight:F1})";
+                }));
+                parts.Add($"Date Ranges: {ranges}");
             }
 
             return parts.Count > 0
-                ? "Search Pattern Analysis: " + string.Join(" | ", parts)
-                : "Search Pattern Analysis: No data";
+                ? string.Join(" | ", parts)
+                : "No search data";
         }
     }
 }
