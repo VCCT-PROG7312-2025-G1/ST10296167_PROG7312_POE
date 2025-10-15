@@ -6,7 +6,7 @@
 
 [https://github.com/VCCT-PROG7312-2025-G1/ST10296167_PROG7312_POE.git](https://github.com/VCCT-PROG7312-2025-G1/ST10296167_PROG7312_POE.git)
 
-### _YouTube Demo VideoS:_
+### _YouTube Demo Videos:_
 
 #### Part 2 Video
 [https://youtu.be/tAApxcHLAY8](https://youtu.be/tAApxcHLAY8)
