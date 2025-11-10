@@ -140,6 +140,7 @@ namespace ST10296167_PROG7312_POE.Data
                     Address = "123 Main Street",
                     Suburb = "Hillcrest",
                     Location = "123 Main Street, Hillcrest",
+                    Status = IssueStatus.Resolved,
                     CreatedAt = DateTime.Now.AddDays(-5)
                 },
                 new Issue
@@ -149,6 +150,7 @@ namespace ST10296167_PROG7312_POE.Data
                     Address = "456 Oak Avenue",
                     Suburb = "Westville",
                     Location = "456 Oak Avenue, Westville",
+                    Status = IssueStatus.Resolved,
                     CreatedAt = DateTime.Now.AddDays(-3)
                 },
                 new Issue
@@ -158,6 +160,7 @@ namespace ST10296167_PROG7312_POE.Data
                     Address = "789 Pine Road",
                     Suburb = "Durban North",
                     Location = "789 Pine Road, Durban North",
+                    Status = IssueStatus.InProgress,
                     CreatedAt = DateTime.Now.AddDays(-2)
                 },
                 new Issue
@@ -167,6 +170,7 @@ namespace ST10296167_PROG7312_POE.Data
                     Address = "321 Cedar Street",
                     Suburb = "Pinetown",
                     Location = "321 Cedar Street, Pinetown",
+                    Status = IssueStatus.InProgress,
                     CreatedAt = DateTime.Now.AddDays(-1)
                 },
                 new Issue
@@ -176,6 +180,7 @@ namespace ST10296167_PROG7312_POE.Data
                     Address = "654 Maple Drive",
                     Suburb = "Kloof",
                     Location = "654 Maple Drive, Kloof",
+                    Status = IssueStatus.Submitted,
                     CreatedAt = DateTime.Now.AddHours(-6)
                 }
             };

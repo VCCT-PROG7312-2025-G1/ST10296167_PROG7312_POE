@@ -26,6 +26,8 @@ namespace ST10296167_PROG7312_POE.Models
         [MaxLength(500)]
         public string Description { get; set; }
 
+        public IssueStatus Status { get; set; } = IssueStatus.Submitted;
+
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         // EF Core navigation property
@@ -34,6 +36,13 @@ namespace ST10296167_PROG7312_POE.Models
         // In-memory data structure (not mapped to database)
         [NotMapped]
         public LinkedList<UploadedFile>? Files { get; set; } = new LinkedList<UploadedFile>();
+    }
+
+    public enum IssueStatus
+    {
+        Submitted = 2,
+        InProgress = 3,
+        Resolved = 1,
     }
 }
 //--------------------------------------------------------X END OF FILE X-------------------------------------------------------------------//

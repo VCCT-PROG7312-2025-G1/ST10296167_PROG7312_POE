@@ -27,6 +27,7 @@ namespace ST10296167_PROG7312_POE.Data
                 entity.Property(e => e.Suburb).IsRequired().HasMaxLength(20);
                 entity.Property(e => e.Category).IsRequired();
                 entity.Property(e => e.Description).IsRequired().HasMaxLength(500);
+                entity.Property(e => e.Status).IsRequired();
                 entity.Property(e => e.CreatedAt).HasDefaultValueSql("datetime('now')");
             });
 
