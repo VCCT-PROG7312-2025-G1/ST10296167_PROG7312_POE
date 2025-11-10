@@ -94,6 +94,13 @@ namespace ST10296167_PROG7312_POE.Services.Initialization
                     _dataStore.ReportedIssues.Add(issue.ID, issue);
                 }
 
+                if (_dataStore.ReportedIssues.Count > 0)
+                {
+                    // Build AVL Tree and Graph from reported issues
+                    _dataStore.ReportsAVLTree.Build(_dataStore.ReportedIssues.Values);
+                    _dataStore.ReportsGraph.Build(_dataStore.ReportedIssues.Values);
+                }
+
                 // Load all feedback from database
                 var dbFeedback = await _feedbackRepository.GetAllFeedbackAsync();
                 foreach (var feedback in dbFeedback)

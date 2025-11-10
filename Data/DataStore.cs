@@ -1,4 +1,5 @@
-﻿using ST10296167_PROG7312_POE.Models;
+﻿using ST10296167_PROG7312_POE.Data.DataStructures;
+using ST10296167_PROG7312_POE.Models;
 
 namespace ST10296167_PROG7312_POE.Data
 {
@@ -16,6 +17,9 @@ namespace ST10296167_PROG7312_POE.Data
         public Stack<Announcement> RecentAnnouncements { get; set; } = new Stack<Announcement>();
         public Queue<SearchQuery> SearchHistory { get; set; } = new Queue<SearchQuery>();
         public List<Event> CurrentRecommendations { get; set; } = new List<Event>();
+        public ReportsAVLTree ReportsAVLTree { get; set; } = new ReportsAVLTree();
+        public ReportsGraph ReportsGraph { get; set; } = new ReportsGraph();
+        public ReportsMinHeap ReportsMinHeap { get; set; } = new ReportsMinHeap();
 
         // Constructor
         //------------------------------------------------------------------------------------------------------------------------------------------//

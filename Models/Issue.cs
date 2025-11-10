@@ -41,8 +41,8 @@ namespace ST10296167_PROG7312_POE.Models
     public enum IssueStatus
     {
         Submitted = 2,
-        InProgress = 3,
-        Resolved = 1,
+        InProgress = 1,
+        Resolved = 3,
     }
 }
 //--------------------------------------------------------X END OF FILE X-------------------------------------------------------------------//
