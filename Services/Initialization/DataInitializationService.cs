@@ -79,6 +79,7 @@ namespace ST10296167_PROG7312_POE.Services.Initialization
                         Location = dbIssue.Location,
                         Category = dbIssue.Category,
                         Description = dbIssue.Description,
+                        Status = dbIssue.Status, 
                         CreatedAt = dbIssue.CreatedAt,
                         Files = new LinkedList<UploadedFile>()
                     };
