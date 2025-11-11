@@ -68,8 +68,11 @@ namespace ST10296167_PROG7312_POE.Services.Report
                     }
                 }
 
-                // Add to in-memory data structure
+                // Add to in-memory data structures
                 _dataStore.ReportedIssues.Add(issue.ID, issue);
+                _dataStore.ReportsAVLTree.Insert(issue);
+                _dataStore.ReportsGraph.AddReport(issue);
+
                 Console.WriteLine("SAVED ISSUE");
                 return true;
             }
