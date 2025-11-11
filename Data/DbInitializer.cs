@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ST10296167_PROG7312_POE.Models;
+using System.IO;
 
 namespace ST10296167_PROG7312_POE.Data
 {
@@ -182,6 +183,165 @@ namespace ST10296167_PROG7312_POE.Data
                     Location = "654 Maple Drive, Kloof",
                     Status = IssueStatus.Submitted,
                     CreatedAt = DateTime.Now.AddHours(-6)
+                },
+                // CLUSTER 1: Road Damage in Westville (3 issues within 3 days)
+                new Issue
+                {
+                    Category = "Road Damage",
+                    Description = "Deep pothole on the main intersection causing tire damage and traffic slowdowns.",
+                    Address = "12 Sunset Boulevard",
+                    Suburb = "Westville",
+                    Location = "12 Sunset Boulevard, Westville",
+                    Status = IssueStatus.Submitted,
+                    CreatedAt = DateTime.Now.AddDays(-30)
+                },
+                new Issue
+                {
+                    Category = "Road Damage",
+                    Description = "Multiple cracks and surface deterioration making the road unsafe for cyclists.",
+                    Address = "45 Valley Road",
+                    Suburb = "Westville",
+                    Location = "45 Valley Road, Westville",
+                    Status = IssueStatus.Submitted,
+                    CreatedAt = DateTime.Now.AddDays(-29)
+                },
+                new Issue
+                {
+                    Category = "Road Damage",
+                    Description = "Road surface collapsed after recent rainfall, creating a large sinkhole.",
+                    Address = "78 Ridge Avenue",
+                    Suburb = "Westville",
+                    Location = "78 Ridge Avenue, Westville",
+                    Status = IssueStatus.InProgress,
+                    CreatedAt = DateTime.Now.AddDays(-28)
+                },
+
+                // CLUSTER 2: Water & Sanitation in Durban North (2 issues within 3 days)
+                new Issue
+                {
+                    Category = "Water & Sanitation",
+                    Description = "Sewage leak in residential area causing foul odors and health concerns.",
+                    Address = "234 Beach Road",
+                    Suburb = "Durban North",
+                    Location = "234 Beach Road, Durban North",
+                    Status = IssueStatus.InProgress,
+                    CreatedAt = DateTime.Now.AddDays(-25)
+                },
+                new Issue
+                {
+                    Category = "Water & Sanitation",
+                    Description = "Water pressure extremely low in the area, affecting multiple households.",
+                    Address = "567 Ocean Drive",
+                    Suburb = "Durban North",
+                    Location = "567 Ocean Drive, Durban North",
+                    Status = IssueStatus.Submitted,
+                    CreatedAt = DateTime.Now.AddDays(-24)
+                },
+
+                // CLUSTER 3: Waste Management in Pinetown (2 issues within 3 days)
+                new Issue
+                {
+                    Category = "Waste Management",
+                    Description = "Garbage bins not collected for two weeks, causing overflow and attracting pests.",
+                    Address = "89 Station Road",
+                    Suburb = "Pinetown",
+                    Location = "89 Station Road, Pinetown",
+                    Status = IssueStatus.Submitted,
+                    CreatedAt = DateTime.Now.AddDays(-20)
+                },
+                new Issue
+                {
+                    Category = "Waste Management",
+                    Description = "Broken recycling bins need replacement, recyclables being scattered by wind.",
+                    Address = "156 Market Street",
+                    Suburb = "Pinetown",
+                    Location = "156 Market Street, Pinetown",
+                    Status = IssueStatus.Submitted,
+                    CreatedAt = DateTime.Now.AddDays(-18)
+                },
+
+                // CLUSTER 4: Public Safety in various suburbs (2 issues within 3 days)
+                new Issue
+                {
+                    Category = "Public Safety",
+                    Description = "Broken fence at community park allowing unauthorized access and vandalism.",
+                    Address = "23 Park Lane",
+                    Suburb = "Hillcrest",
+                    Location = "23 Park Lane, Hillcrest",
+                    Status = IssueStatus.Resolved,
+                    CreatedAt = DateTime.Now.AddDays(-15)
+                },
+                new Issue
+                {
+                    Category = "Public Safety",
+                    Description = "Inadequate lighting on pedestrian pathway creating safety concerns at night.",
+                    Address = "67 Garden Road",
+                    Suburb = "Kloof",
+                    Location = "67 Garden Road, Kloof",
+                    Status = IssueStatus.Submitted,
+                    CreatedAt = DateTime.Now.AddDays(-13)
+                },
+
+                // STANDALONE ISSUES (spread across time, different categories)
+                new Issue
+                {
+                    Category = "Electricity",
+                    Description = "Frequent power outages in the neighborhood lasting several hours each time.",
+                    Address = "345 Power Line Road",
+                    Suburb = "Hillcrest",
+                    Location = "345 Power Line Road, Hillcrest",
+                    Status = IssueStatus.InProgress,
+                    CreatedAt = DateTime.Now.AddDays(-10)
+                },
+                new Issue
+                {
+                    Category = "Public Transport",
+                    Description = "Bus stop shelter is damaged and provides no protection from weather.",
+                    Address = "12 Transit Avenue",
+                    Suburb = "Pinetown",
+                    Location = "12 Transit Avenue, Pinetown",
+                    Status = IssueStatus.Submitted,
+                    CreatedAt = DateTime.Now.AddDays(-7)
+                },
+                new Issue
+                {
+                    Category = "Environment",
+                    Description = "Trees overhanging power lines pose risk of outages and fire hazard.",
+                    Address = "89 Forest Road",
+                    Suburb = "Kloof",
+                    Location = "89 Forest Road, Kloof",
+                    Status = IssueStatus.Submitted,
+                    CreatedAt = DateTime.Now.AddDays(-5)
+                },
+                new Issue
+                {
+                    Category = "Utilities",
+                    Description = "Drainage system blocked causing flooding during rainfall.",
+                    Address = "234 River Street",
+                    Suburb = "Durban North",
+                    Location = "234 River Street, Durban North",
+                    Status = IssueStatus.Submitted,
+                    CreatedAt = DateTime.Now.AddDays(-3)
+                },
+                new Issue
+                {
+                    Category = "Other",
+                    Description = "Graffiti vandalism on municipal building walls requires cleaning and repainting.",
+                    Address = "567 Town Square",
+                    Suburb = "Westville",
+                    Location = "567 Town Square, Westville",
+                    Status = IssueStatus.Submitted,
+                    CreatedAt = DateTime.Now.AddDays(-1)
+                },
+                new Issue
+                {
+                    Category = "Roads & Transport",
+                    Description = "Traffic light malfunctioning at busy intersection causing traffic congestion and near-accidents.",
+                    Address = "90 Highway Junction",
+                    Suburb = "Pinetown",
+                    Location = "90 Highway Junction, Pinetown",
+                    Status = IssueStatus.InProgress,
+                    CreatedAt = DateTime.Now.AddHours(-12)
                 }
             };
 
@@ -197,6 +357,8 @@ namespace ST10296167_PROG7312_POE.Data
                 Console.WriteLine("Uploaded files already exist. Skipping file seeding.");
                 return;
             }
+
+            ClearUploadsFolder();
 
             // Re-query the issues to ensure IDs are present
             var demoIssues = await context.Issues.OrderBy(i => i.CreatedAt).ToListAsync();
@@ -261,6 +423,91 @@ namespace ST10296167_PROG7312_POE.Data
                     FilePath = await CopySampleFileToUploads("playground.jpg", "sample/images/playground.jpeg"),
                     IssueID = demoIssues.ElementAtOrDefault(4)?.ID ?? demoIssues[0].ID,
                     CreatedAt = DateTime.Now.AddHours(-6)
+                },
+                // File for Issue 5 (Road Damage Cluster - Westville)
+                new UploadedFile
+                {
+                    FileName = "pothole1.jpg",
+                    MimeType = "image/jpeg",
+                    Size = 1024000,
+                    FilePath = await CopySampleFileToUploads("pothole1.jpg", "sample/images/pothole1.jpg"),
+                    IssueID = demoIssues.ElementAtOrDefault(5)?.ID ?? demoIssues[0].ID,
+                    CreatedAt = DateTime.Now.AddDays(-30)
+                },
+        
+                // File for Issue 6 (Road Damage Cluster - Westville)
+                new UploadedFile
+                {
+                    FileName = "pothole2.jpg",
+                    MimeType = "image/jpeg",
+                    Size = 856000,
+                    FilePath = await CopySampleFileToUploads("pothole2.jpg", "sample/images/pothole2.jpg"),
+                    IssueID = demoIssues.ElementAtOrDefault(6)?.ID ?? demoIssues[0].ID,
+                    CreatedAt = DateTime.Now.AddDays(-29)
+                },
+        
+                // File for Issue 8 (Water & Sanitation Cluster - Durban North)
+                new UploadedFile
+                {
+                    FileName = "waterpipe.jpg",
+                    MimeType = "image/jpeg",
+                    Size = 980000,
+                    FilePath = await CopySampleFileToUploads("waterpipe.jpg", "sample/images/waterpipe.jpg"),
+                    IssueID = demoIssues.ElementAtOrDefault(8)?.ID ?? demoIssues[0].ID,
+                    CreatedAt = DateTime.Now.AddDays(-25)
+                },
+        
+                // File for Issue 10 (Waste Management Cluster - Pinetown)
+                new UploadedFile
+                {
+                    FileName = "dumping.jpg",
+                    MimeType = "image/jpeg",
+                    Size = 1150000,
+                    FilePath = await CopySampleFileToUploads("dumping.jpg", "sample/images/dumping.jpg"),
+                    IssueID = demoIssues.ElementAtOrDefault(10)?.ID ?? demoIssues[0].ID,
+                    CreatedAt = DateTime.Now.AddDays(-20)
+                },
+        
+                // File for Issue 12 (Public Safety)
+                new UploadedFile
+                {
+                    FileName = "playground.jpg",
+                    MimeType = "image/jpeg",
+                    Size = 890000,
+                    FilePath = await CopySampleFileToUploads("playground.jpg", "sample/images/playground.jpeg"),
+                    IssueID = demoIssues.ElementAtOrDefault(12)?.ID ?? demoIssues[0].ID,
+                    CreatedAt = DateTime.Now.AddDays(-15)
+                },
+        
+                // File for Issue 13 (Public Safety)
+                new UploadedFile
+                {
+                    FileName = "streetlight.jpg",
+                    MimeType = "image/jpeg",
+                    Size = 1200000,
+                    FilePath = await CopySampleFileToUploads("streetlight.jpg", "sample/images/streetlight.jpeg"),
+                    IssueID = demoIssues.ElementAtOrDefault(13)?.ID ?? demoIssues[0].ID,
+                    CreatedAt = DateTime.Now.AddDays(-13)
+                },
+        
+                // Files for Issue 19 (Roads & Transport)
+                new UploadedFile
+                {
+                    FileName = "streetlight.jpg",
+                    MimeType = "image/jpeg",
+                    Size = 1200000,
+                    FilePath = await CopySampleFileToUploads("streetlight.jpg", "sample/images/streetlight.jpeg"),
+                    IssueID = demoIssues.ElementAtOrDefault(19)?.ID ?? demoIssues[0].ID,
+                    CreatedAt = DateTime.Now.AddHours(-12)
+                },
+                new UploadedFile
+                {
+                    FileName = "pothole1.jpg",
+                    MimeType = "image/jpeg",
+                    Size = 1024000,
+                    FilePath = await CopySampleFileToUploads("pothole1.jpg", "sample/images/pothole1.jpg"),
+                    IssueID = demoIssues.ElementAtOrDefault(19)?.ID ?? demoIssues[0].ID,
+                    CreatedAt = DateTime.Now.AddHours(-12)
                 }
             };
 
@@ -444,6 +691,50 @@ namespace ST10296167_PROG7312_POE.Data
             {
                 Console.WriteLine($"Error seeding demo announcements: {ex.Message}");
                 throw;
+            }
+        }
+
+        private static void ClearUploadsFolder() 
+        {
+            try
+            {
+                string currentDirectory = Directory.GetCurrentDirectory();
+                string uploadsFolder = Path.Combine(currentDirectory, "wwwroot", "uploads");
+
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    return;
+                }
+
+                foreach (var file in Directory.GetFiles(uploadsFolder))
+                {
+                    try
+                    {
+                        File.Delete(file);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error deleting file {file}: {ex.Message}");
+                    }
+                }
+
+                foreach (var directory in Directory.GetDirectories(uploadsFolder))
+                {
+                    try
+                    {
+                        Directory.Delete(directory, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error deleting directory {directory}: {ex.Message}");
+                    }
+                }
+
+                Console.WriteLine("Cleared uploads folder before seeding files.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error clearing uploads folder: {ex.Message}");
             }
         }
 
