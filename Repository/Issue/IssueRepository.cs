@@ -50,6 +50,14 @@ namespace ST10296167_PROG7312_POE.Repository.Issue
                 .Where(f => f.IssueID == issueId)
                 .ToListAsync();
         }
+
+        // Update an existing issue in the database
+        public async Task<IssueModel> UpdateIssueAsync(IssueModel issue)
+        {
+            _context.Issues.Update(issue);
+            await _context.SaveChangesAsync();
+            return issue;
+        }
         //------------------------------------------------------------------------------------------------------------------------------------------//
     }
 }
