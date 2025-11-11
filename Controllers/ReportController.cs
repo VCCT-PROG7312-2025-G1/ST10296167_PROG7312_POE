@@ -83,6 +83,28 @@ namespace ST10296167_PROG7312_POE.Controllers
 
             return View(viewModel);
         }
+
+        [HttpGet]
+        public IActionResult ReportDetails(int issueId)
+        {
+            var issue = _reportService.GetIssueById(issueId);
+
+            if (issue == null)
+            {
+                TempData["ErrorMessage"] = "Issue not found.";
+                return RedirectToAction("ReportStatus");
+            }
+
+            var relatedIssues = _reportService.GetRelatedIssues(issueId);
+
+            var viewModel = new IssueDetailsViewModel
+            {
+                Issue = issue,
+                RelatedIssues = relatedIssues
+            };
+
+            return View(viewModel);
+        }
         //------------------------------------------------------------------------------------------------------------------------------------------//
 
         // Methods
@@ -110,6 +132,32 @@ namespace ST10296167_PROG7312_POE.Controllers
                 return View("Report", issue);
             }
 
+        }
+
+        // Update the status of an issue
+        [HttpPost]
+        public async Task<IActionResult> UpdateStatus(int issueId, IssueStatus status)
+        {
+            // Verify if employee
+            if (!_signInManager.IsSignedIn(User))
+            {
+                TempData["ErrorMessage"] = "You must be logged in to update issue status.";
+                return RedirectToAction("ReportStatus");
+            }
+
+            // Update issue status
+            var result = await _reportService.UpdateIssueStatusAsync(issueId, status);
+
+            if (result)
+            {
+                TempData["SuccessMessage"] = $"Issue #{issueId} status updated successfully.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = $"Failed to update issue #{issueId} status. Please try again.";
+            }
+
+            return RedirectToAction("ReportStatus");
         }
 
         // Save a user's submitted rating and feedback to the Feedback linked list and db

@@ -1,0 +1,275 @@
+﻿@model ST10296167_PROG7312_POE.Models.IssueDetailsViewModel
+
+<link href="~/css/report-details.css" rel="stylesheet" />
+
+<body data-view-file-url="@Url.Action("ViewFile", "Report")" data-download-file-url="@Url.Action("DownloadFile", "Report")">
+
+    <!-- Back Button -->
+    <a asp-action="ReportStatus" asp-controller="Report"
+       class="btn btn-secondary position-absolute"
+       style="top: 100px; left: 10px; z-index: 1000;">
+        &larr; Back
+    </a>
+
+    <!-- Page Header -->
+    <header class="report-details-header text-center">
+        <h1 class="main-heading">Issue Details</h1>
+        <p class="sub-text">View detailed information about the issue</p>
+    </header>
+
+    <div class="report-details-container">
+
+        <!-- Error Message -->
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                @TempData["ErrorMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        @if (Model.Issue == null)
+        {
+            <div class="alert alert-warning">
+                <h4>Issue Not Found</h4>
+                <p>The requested issue could not be found.</p>
+                <a asp-action="ReportStatus" asp-controller="Report" class="btn btn-primary">Back to Reports</a>
+            </div>
+        }
+        else
+        {
+            <!-- Main Issue Card -->
+            <div class="main-issue-section">
+                <div class="main-issue-card">
+
+                    <!-- Header -->
+                    <div class="main-issue-card-header">
+                        <div class="header-left">
+                            <span class="issue-id">Issue #@Model.Issue.ID</span>
+                            <span class="badge category-badge">@Model.Issue.Category</span>
+                        </div>
+                        <div class="header-right">
+                            @{
+                                var statusClass = Model.Issue.Status == IssueStatus.Resolved ? "status-resolved" :
+                                                  Model.Issue.Status == IssueStatus.InProgress ? "status-in-progress" :
+                                                  "status-submitted";
+                                var statusText = Model.Issue.Status == IssueStatus.Resolved ? "Resolved" :
+                                                 Model.Issue.Status == IssueStatus.InProgress ? "In Progress" :
+                                                 "Submitted";
+                            }
+                            <span class="badge @statusClass">@statusText</span>
+                        </div>
+                    </div>
+
+                    <div class="main-issue-card-body">
+
+                        <!-- Issue Details -->
+                        <div class="issue-details-section">
+
+                            <!-- Location -->
+                            <div class="detail-item">
+                                <h6 class="detail-label">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    Location
+                                </h6>
+                                <p class="detail-value">@Model.Issue.Location</p>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="detail-item">
+                                <h6 class="detail-label">
+                                    <i class="fas fa-align-left"></i>
+                                    Description
+                                </h6>
+                                <p class="detail-value">@Model.Issue.Description</p>
+                            </div>
+
+                            <!-- Date -->
+                            <div class="detail-item">
+                                <h6 class="detail-label">
+                                    <i class="fas fa-calendar"></i>
+                                    Date Submitted
+                                </h6>
+                                <p class="detail-value">@Model.Issue.CreatedAt.ToString("MMM dd, yyyy 'at' HH:mm")</p>
+                            </div>
+                        </div>
+
+                        <!-- Files Section -->
+                        <div class="files-section">
+                            <h6 class="files-section-title">
+                                <i class="fas fa-paperclip"></i>
+                                Attached Files
+                                @if (Model.Issue.Files != null && Model.Issue.Files.Any())
+                                {
+                                    <span class="file-count-badge">@Model.Issue.Files.Count</span>
+                                }
+                            </h6>
+
+                            @if (Model.Issue.Files != null && Model.Issue.Files.Any())
+                            {
+                                <div class="files-list">
+                                    @foreach (var file in Model.Issue.Files)
+                                    {
+                                        <div class="file-item">
+                                            <div class="file-info">
+                                                <div class="file-name" title="@file.FileName">
+                                                    <i class="fas fa-file"></i>
+                                                    @file.FileName
+                                                </div>
+                                                <div class="file-size">
+                                                    @{
+                                                        string fileSize = file.Size < 1024 ? $"{file.Size} B" :
+                                                                          file.Size < 1024 * 1024 ? $"{file.Size / 1024.0:F2} KB" :
+                                                                          $"{file.Size / (1024.0 * 1024.0):F2} MB";
+                                                    }
+                                                    @fileSize
+                                                </div>
+                                            </div>
+                                            <div class="file-actions">
+                                                @if (file.MimeType.StartsWith("image/"))
+                                                {
+                                                    <button class="btn btn-outline-primary btn-sm p-1"
+                                                            onclick="viewImage('@file.ID')"
+                                                            style="min-width: 40px; height: 40px;"
+                                                            title="View Image">
+                                                        <img src="~/images/view.png" alt="View" style="height: 24px; width: 24px;" />
+                                                    </button>
+                                                }
+                                                <a href="@Url.Action("DownloadFile", new { fileId = file.ID })"
+                                                   class="btn btn-outline-success btn-sm p-1"
+                                                   style="min-width: 40px; height: 40px;"
+                                                   title="Download File">
+                                                    <img src="~/images/download.png" alt="Download" style="height: 24px; width: 24px;" />
+                                                </a>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="no-files">
+                                    <i class="fas fa-inbox"></i>
+                                    <p>No files attached</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Related Issues Section -->
+            @if (Model.RelatedIssues != null && Model.RelatedIssues.Any())
+            {
+                <div class="related-issues-section">
+                    <div class="related-issues-header">
+                        <h3>
+                            <i class="fas fa-link"></i>
+                            Related Issues
+                            <span class="related-count">(@Model.RelatedIssues.Count)</span>
+                        </h3>
+                    </div>
+                    <div class="related-issues-grid">
+                        @foreach (var relatedIssue in Model.RelatedIssues)
+                        {
+                            <div class="related-issue-card">
+
+                                <!-- Card Header -->
+                                <div class="related-issue-card-header">
+                                    <span class="related-issue-id">Issue #@relatedIssue.ID</span>
+                                    <span class="badge related-category-badge">@relatedIssue.Category</span>
+                                </div>
+
+                                <div class="related-issue-card-body">
+
+                                    <!-- Location -->
+                                    <div class="related-detail-item">
+                                        <h6 class="related-detail-label">
+                                            Location
+                                        </h6>
+                                        <p class="related-detail-value">@relatedIssue.Location</p>
+                                    </div>
+
+                                    <!-- Description -->
+                                    <div class="related-detail-item">
+                                        <h6 class="related-detail-label">
+                                            Description
+                                        </h6>
+                                        <p class="related-detail-value">@relatedIssue.Description</p>
+                                    </div>
+
+                                    <!-- Status -->
+                                    <div class="related-detail-item">
+                                        <h6 class="related-detail-label">
+                                            Status
+                                        </h6>
+                                        @{
+                                            var relatedStatusClass = relatedIssue.Status == IssueStatus.Resolved ? "status-resolved" :
+                                                                     relatedIssue.Status == IssueStatus.InProgress ? "status-in-progress" :
+                                                                     "status-submitted";
+                                            var relatedStatusText = relatedIssue.Status == IssueStatus.Resolved ? "Resolved" :
+                                                                     relatedIssue.Status == IssueStatus.InProgress ? "In Progress" :
+                                                                     "Submitted";
+                                        }
+                                        <span class="badge @relatedStatusClass">@relatedStatusText</span>
+                                    </div>
+
+                                    <!-- Date -->
+                                    <div class="related-detail-item">
+                                        <h6 class="related-detail-label">
+                                            Date
+                                        </h6>
+                                        <p class="related-detail-value">@relatedIssue.CreatedAt.ToString("MMM dd, yyyy")</p>
+                                    </div>
+
+                                    <!-- Files Count -->
+                                    @if (relatedIssue.Files != null && relatedIssue.Files.Any())
+                                    {
+                                        <div class="related-detail-item">
+                                            <h6 class="related-detail-label">
+                                                Files
+                                            </h6>
+                                            <p class="related-detail-value">@relatedIssue.Files.Count file(s)</p>
+                                        </div>
+                                    }
+
+                                    <!-- View Details Button -->
+                                    <div class="related-issue-actions">
+                                        <a asp-action="ReportDetails" asp-controller="Report"
+                                           asp-route-issueId="@relatedIssue.ID"
+                                           class="btn btn-sm btn-outline-primary">
+                                            View Details
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <!-- Image Modal -->
+    <div class="modal fade" id="imageModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Image Preview</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="modalImage" src="" class="img-fluid" style="max-height: 70vh;">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <a id="downloadImageBtn" href="" class="btn btn-primary">
+                        Download
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script src="~/js/report-details.js"></script>

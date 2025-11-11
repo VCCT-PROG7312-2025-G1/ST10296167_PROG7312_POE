@@ -151,7 +151,7 @@ namespace ST10296167_PROG7312_POE.Services.Report
             }
             return null;
         }
-        //------------------------------------------------------------------------------------------------------------------------------------------//
+
         // Get issues filtered by the selected filter options and sorted by priority using an AVL tree and Min-Heap
         public List<Issue> GetFilteredAndSortedIssues(RequestStatusFilter filter)
         {
@@ -184,9 +184,14 @@ namespace ST10296167_PROG7312_POE.Services.Report
                 issueList = issueList.Where(i => i.Status == filter.Status.Value).ToList();
             }
 
-            if (filter.Date.HasValue)
+            if (filter.StartDate.HasValue)
             {
-                issueList = issueList.Where(i => DateOnly.FromDateTime(i.CreatedAt) == filter.Date.Value).ToList();
+                issueList = issueList.Where(i => DateOnly.FromDateTime(i.CreatedAt) >= filter.StartDate.Value).ToList();
+            }
+
+            if (filter.EndDate.HasValue)
+            {
+                issueList = issueList.Where(i => DateOnly.FromDateTime(i.CreatedAt) <= filter.EndDate.Value).ToList();
             }
 
             // Use Min-Heap for priority based sorting
@@ -197,6 +202,68 @@ namespace ST10296167_PROG7312_POE.Services.Report
             }
 
             return issueList;
+        }    
+
+        // Update the status of a specific issue
+        public async Task<bool> UpdateIssueStatusAsync(int issueId, IssueStatus newStatus)
+        {
+            try
+            {
+                var issue = GetIssueById(issueId);
+
+                if (issue == null)
+                {
+                    return false;
+                }
+
+                issue.Status = newStatus;
+
+                // Update in database
+                await _issueRepository.UpdateIssueAsync(issue);
+
+                // Update in data structures
+                _dataStore.ReportedIssues[issueId] = issue;
+                _dataStore.ReportsAVLTree.Update(issue);
+                _dataStore.ReportsGraph.UpdateReport(issue);
+
+                Console.WriteLine($"Updated Issue #{issueId} status to {newStatus}");
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error updating issue: ",ex);
+                return false;
+            }
+        }
+
+        // Get statistics about reported issues
+        public RequestStatusStats GetStatistics()
+        {
+            var issuesList = _dataStore.ReportsAVLTree.InOrder();
+
+            var stats = new RequestStatusStats
+            {
+                TotalIssues = issuesList.Count,
+                IssuesByStatus = new Dictionary<IssueStatus, int>(),
+                IssuesByCategory = new Dictionary<string, int>()
+            };
+
+            // Count issues by status
+            foreach (IssueStatus status in Enum.GetValues(typeof(IssueStatus)))
+            {
+                stats.IssuesByStatus[status] = issuesList.Count(i => i.Status == status);
+            }
+
+            var categories = issuesList.Select(i => i.Category).Distinct();
+
+            // Count issues by category
+            foreach (var category in categories)
+            {
+                stats.IssuesByCategory[category] = issuesList.Count(i => i.Category == category);
+            }
+
+            return stats;
         }
 
         // Get a specific issue by ID using a direct AVL tree search
@@ -213,21 +280,6 @@ namespace ST10296167_PROG7312_POE.Services.Report
         public int GetRelatedCount(int issueId)
         {
             return _dataStore.ReportsGraph.GetRelatedCount(issueId);
-        }
-
-        public List<IssueCluster> GetIssueClusters()
-        {
-            return new List<IssueCluster>();
-        }
-
-        public async Task<bool> UpdateIssueStatusAsync(int issueId, IssueStatus newStatus)
-        {
-            return new bool();
-        }
-
-        public RequestStatusStats GetStatistics()
-        {
-            return new RequestStatusStats();
         }
     }
 }
