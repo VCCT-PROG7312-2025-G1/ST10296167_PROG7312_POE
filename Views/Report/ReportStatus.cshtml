@@ -109,9 +109,12 @@
     <div class="requests-section">
         <div class="requests-card">
             <div class="requests-card-header">
-                <h3>
-                    Requests
-                </h3>
+                <div class="section-divider">
+                    <h3 class="section-title">
+                        Requests
+                    </h3>
+                    <span class="issues-count">@(Model.FilteredIssues?.Count ?? 0) Issues</span>
+                </div>
             </div>
 
             <!-- Filter Bar -->
@@ -123,7 +126,7 @@
                         <label for="ID">Issue ID</label>
                         <input type="number" class="form-control" id="ID" name="ID"
                                value="@Model.CurrentFilter.ID"
-                               placeholder="Enter ID" />
+                               placeholder="Enter ID" min="1" step="1"/>
                     </div>
 
                     <!-- Category -->

@@ -185,14 +185,32 @@ body {
     padding: 1.25rem;
 }
 
-.requests-card-header h3 {
+.section-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
     margin: 0;
+}
+
+.section-title {
     font-size: 1.5rem;
     font-weight: 600;
     color: #495057;
+    margin: 0;
     display: flex;
     align-items: center;
     gap: 0.5rem;
+}
+
+.issues-count {
+    background-color: #e9ecef;
+    color: #495057;
+    font-size: 0.75rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 20px;
+    margin-left: auto;
+    white-space: nowrap;
+    font-weight: 700;
 }
 
 .requests-card-body {
@@ -645,8 +663,18 @@ button.update-status-link:hover {
     }
 
     .statistics-card-header h3,
-    .requests-card-header h3 {
+    .section-title {
         font-size: 1.25rem;
+    }
+
+    .section-divider {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .issues-count {
+        margin-left: 0;
+        margin-top: 0.5rem;
     }
 
     .filter-form {
