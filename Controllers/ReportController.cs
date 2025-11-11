@@ -21,6 +21,7 @@ namespace ST10296167_PROG7312_POE.Controllers
 
         // Views
         //------------------------------------------------------------------------------------------------------------------------------------------//
+        [HttpGet]
         public IActionResult Report()
         {
             // If user is logged in, redirect them to user dashboard
@@ -32,6 +33,7 @@ namespace ST10296167_PROG7312_POE.Controllers
             return View();
         }
 
+        [HttpGet]
         public IActionResult ReportMenu()
         {
             // If user is logged in, redirect them to user dashboard
@@ -43,6 +45,7 @@ namespace ST10296167_PROG7312_POE.Controllers
             return View();
         }
 
+        [HttpGet]
         public IActionResult ReportList()
         {
             // If user is logged in, redirect them to user dashboard
@@ -53,6 +56,32 @@ namespace ST10296167_PROG7312_POE.Controllers
             
             var issues = _reportService.GetAllIssues();
             return View(issues);
+        }
+
+        [HttpGet]
+        public IActionResult ReportStatus(RequestStatusFilter filter)
+        {
+            var issues = _reportService.GetFilteredAndSortedIssues(filter);
+
+            var relatedIssueCounts = new Dictionary<int, int>();
+
+            foreach (var issue in issues)
+            {
+                relatedIssueCounts[issue.ID] = _reportService.GetRelatedCount(issue.ID);
+            }
+
+            bool isEmployee = _signInManager.IsSignedIn(User);
+
+            var viewModel = new ReportStatusVIewModel
+            {
+                FilteredIssues = issues,
+                CurrentFilter = filter,
+                Statistics = _reportService.GetStatistics(),
+                IsEmployee = isEmployee,
+                RelatedCounts = relatedIssueCounts
+            };
+
+            return View(viewModel);
         }
         //------------------------------------------------------------------------------------------------------------------------------------------//
 

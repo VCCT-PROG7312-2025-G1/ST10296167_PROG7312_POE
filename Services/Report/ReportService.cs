@@ -1,7 +1,8 @@
-﻿using ST10296167_PROG7312_POE.Data;
+﻿using Microsoft.AspNetCore.Routing.Matching;
+using ST10296167_PROG7312_POE.Data;
 using ST10296167_PROG7312_POE.Models;
-using ST10296167_PROG7312_POE.Repository.Issue;
 using ST10296167_PROG7312_POE.Repository.Feedback;
+using ST10296167_PROG7312_POE.Repository.Issue;
 
 namespace ST10296167_PROG7312_POE.Services.Report
 {
@@ -151,6 +152,83 @@ namespace ST10296167_PROG7312_POE.Services.Report
             return null;
         }
         //------------------------------------------------------------------------------------------------------------------------------------------//
+        // Get issues filtered by the selected filter options and sorted by priority using an AVL tree and Min-Heap
+        public List<Issue> GetFilteredAndSortedIssues(RequestStatusFilter filter)
+        {
+            List<Issue> issueList = new List<Issue>();
+
+            if (filter.ID.HasValue)
+            {
+                // Direct AVL tree search
+                var issue = GetIssueById(filter.ID.Value);
+
+                if (issue != null)
+                {
+                    issueList.Add(issue);
+                }
+            }
+            else
+            {
+                // Get all issues from AVL tree in sorted order
+                issueList = _dataStore.ReportsAVLTree.InOrder();
+            }
+
+            // Apply additional filters
+            if (!string.IsNullOrEmpty(filter.Category))
+            {
+                issueList = issueList.Where(i => i.Category == filter.Category).ToList();
+            }
+
+            if (filter.Status.HasValue)
+            {
+                issueList = issueList.Where(i => i.Status == filter.Status.Value).ToList();
+            }
+
+            if (filter.Date.HasValue)
+            {
+                issueList = issueList.Where(i => DateOnly.FromDateTime(i.CreatedAt) == filter.Date.Value).ToList();
+            }
+
+            // Use Min-Heap for priority based sorting
+            if (issueList.Any())
+            {
+                _dataStore.ReportsMinHeap.Build(issueList);
+                issueList = _dataStore.ReportsMinHeap.ExtractAllSorted();
+            }
+
+            return issueList;
+        }
+
+        // Get a specific issue by ID using a direct AVL tree search
+        public Issue? GetIssueById(int id)
+        {
+            return _dataStore.ReportsAVLTree.Search(id);
+        }
+
+        public List<Issue> GetRelatedIssues(int issueId)
+        {
+            return _dataStore.ReportsGraph.GetRelatedReports(issueId);
+        }
+
+        public int GetRelatedCount(int issueId)
+        {
+            return _dataStore.ReportsGraph.GetRelatedCount(issueId);
+        }
+
+        public List<IssueCluster> GetIssueClusters()
+        {
+            return new List<IssueCluster>();
+        }
+
+        public async Task<bool> UpdateIssueStatusAsync(int issueId, IssueStatus newStatus)
+        {
+            return new bool();
+        }
+
+        public RequestStatusStats GetStatistics()
+        {
+            return new RequestStatusStats();
+        }
     }
 }
 //--------------------------------------------------------X END OF FILE X-------------------------------------------------------------------//
