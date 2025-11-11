@@ -5,6 +5,7 @@ namespace ST10296167_PROG7312_POE.Data.DataStructures
     public class ReportsMinHeap
     {
         private List<Issue> heap;
+        private bool _isEmployee;
 
         public ReportsMinHeap()
         {
@@ -16,8 +17,10 @@ namespace ST10296167_PROG7312_POE.Data.DataStructures
         //------------------------------------------------------------------------------------------------------------------------------------------//
 
         // Build heap from a list of issues
-        public void Build(List<Issue> issues)
+        public void Build(List<Issue> issues, bool isEmp = false)
         {
+            _isEmployee = isEmp;
+
             heap.Clear();
 
             foreach (var issue in issues)
@@ -128,8 +131,18 @@ namespace ST10296167_PROG7312_POE.Data.DataStructures
         // Compare two issues to determine priority based on status and creation date
         private int ComparePriority(Issue issue1, Issue issue2)
         {
+            int status1 = (int)issue1.Status;
+            int status2 = (int)issue2.Status;
+
+            // Check if user is emplyoyee to remap priorities
+            if (_isEmployee)
+            {
+                status1 = (issue1.Status == IssueStatus.Submitted) ? -1 : (int)issue1.Status;
+                status2 = (issue2.Status == IssueStatus.Submitted) ? -1 : (int)issue2.Status;
+            }
+
             // Primary - lower status value = higher priority
-            int statusComparison = issue1.Status.CompareTo(issue2.Status);
+            int statusComparison = status1.CompareTo(status2);
 
             if (statusComparison != 0)
             {

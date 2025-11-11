@@ -156,7 +156,7 @@ namespace ST10296167_PROG7312_POE.Services.Report
         }
 
         // Get issues filtered by the selected filter options and sorted by priority using an AVL tree and Min-Heap
-        public List<Issue> GetFilteredAndSortedIssues(RequestStatusFilter filter)
+        public List<Issue> GetFilteredAndSortedIssues(RequestStatusFilter filter, bool isEmp = false)
         {
             List<Issue> issueList = new List<Issue>();
 
@@ -200,7 +200,7 @@ namespace ST10296167_PROG7312_POE.Services.Report
             // Use Min-Heap for priority based sorting
             if (issueList.Any())
             {
-                _dataStore.ReportsMinHeap.Build(issueList);
+                _dataStore.ReportsMinHeap.Build(issueList, isEmp);
                 issueList = _dataStore.ReportsMinHeap.ExtractAllSorted();
             }
 

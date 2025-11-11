@@ -8,7 +8,7 @@ namespace ST10296167_PROG7312_POE.Services.Report
         Task SaveFeedback(int rating, string? feedback);
         Dictionary<int, Issue> GetAllIssues();
         UploadedFile? GetFileById(int fileId);
-        List<Issue> GetFilteredAndSortedIssues(RequestStatusFilter filter);
+        List<Issue> GetFilteredAndSortedIssues(RequestStatusFilter filter, bool isEmp = false);
         Issue? GetIssueById(int issueId);
         List<Issue> GetRelatedIssues(int issueId);
         int GetRelatedCount(int issueId);

@@ -63,7 +63,9 @@ namespace ST10296167_PROG7312_POE.Controllers
         [HttpGet]
         public IActionResult ReportStatus(RequestStatusFilter filter)
         {
-            var issues = _reportService.GetFilteredAndSortedIssues(filter);
+            bool isEmployee = _signInManager.IsSignedIn(User);
+
+            var issues = _reportService.GetFilteredAndSortedIssues(filter, isEmployee);
 
             var relatedIssueCounts = new Dictionary<int, int>();
 
@@ -72,7 +74,7 @@ namespace ST10296167_PROG7312_POE.Controllers
                 relatedIssueCounts[issue.ID] = _reportService.GetRelatedCount(issue.ID);
             }
 
-            bool isEmployee = _signInManager.IsSignedIn(User);
+           // bool isEmployee = _signInManager.IsSignedIn(User);
 
             var viewModel = new ReportStatusVIewModel
             {
