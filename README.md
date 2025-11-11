@@ -367,19 +367,6 @@ Users can submit the form once all required fields are filled in by clicking the
 
 In order to improve user enagement, the user engagment strategy of in-app feedback will be used to allow users to rate their experience submitting the report through an in-app survey that utilizes a user-friendly **star rating** system in combination with an optional feedback option.
 
-#### Viewing Submitted Issues
-
-Selecting _Submitted Issues_ will display a list of all issues that have been reported by the user. Each issue entry will show the following details:
-
-- Issue ID
-- Category
-- Location (Address and Suburb)
-- Description
-- Issue Status
-- Uploaded files
-
-If any files have been uploaded with the issue, users will be able to download and view it.
-
 ---
 
 ### 2. Local Events and Announcements
@@ -492,6 +479,7 @@ When an employee logs in and navigates to the Service Request Status page, they 
 - **Statistics Overview:** At the top of the page, employees will see a statistics overview section displaying key metrics such as the total number of reported issues and the number of issues in each status category.
 - **Update Issue Status:** Employees can update the status of any reported issue by clicking the **Update** button, selecting the desired updated status from a dropdown menu (only future states) and confirming their choice via the **Confirm** button. This updated status can then be viewed by all users.
 
+---
 
 ## AI Declaration
 
