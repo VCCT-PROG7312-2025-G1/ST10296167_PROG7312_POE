@@ -16,7 +16,7 @@ namespace ST10296167_PROG7312_POE.Data.DataStructures
         //------------------------------------------------------------------------------------------------------------------------------------------//
 
         // Build heap from a list of issues
-        public void BuildHeap(List<Issue> issues)
+        public void Build(List<Issue> issues)
         {
             heap.Clear();
 
