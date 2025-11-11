@@ -41,6 +41,21 @@
                             <li class="nav-item">
                                 <a class="nav-link text-light" asp-area="" asp-controller="EventsAndAnnouncements" asp-action="EventsAndAnnouncements">Events & Announcements</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Report" asp-action="ReportStatus">Service Requests</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="EventsAndAnnouncements" asp-action="AddEvent">Add Event</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="EventsAndAnnouncements" asp-action="AddAnnouncement">Add Announcement</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Report" asp-action="ReportStatus">Service Requests</a>
+                            </li>
                         }
                     </ul>
                     <ul class="navbar-nav">
