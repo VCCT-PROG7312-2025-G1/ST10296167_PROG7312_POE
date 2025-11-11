@@ -1,4 +1,4 @@
-# ZA Municipal Services Application
+﻿# ZA Municipal Services Application
 
 ---
 
@@ -119,6 +119,211 @@ The `DataStore` is registered as a singleton in `Program.cs` using `builder.Serv
 
 ---
 
+## Service Request Status Feature - Data Structure Usage 
+
+### Overview
+
+The **Service Request Status** feature utilizes three advanced data structures that work together to provide efficient organization, retrieval, and display of service requests. Each data structure serves a specific purpose in the data pipeline, from initial storage, to filtering, to final prioritized display.
+
+
+### AVL Tree
+
+**Location**: `DataStructures/ReportsAVLTree.cs` -> `DataStore.ReportsAVLTree`
+
+**Purpose**: Primary storage structure for all service requests, indexed by unique Issue ID with guaranteed logarithmic time complexity for all operations.
+
+**Role & Efficiency Contribution**:
+
+The AVL Tree serves as the backbone of the Service Request Status feature, providing **O(log n)** search, insertion, and deletion operations even as the number of issues grows. Unlike a standard Binary Search Tree which can degrade to O(n) in worst-case scenarios (unbalanced tree), the AVL tree maintains balance through automatic rotations after each insertion or update.
+
+**How It Works**:
+
+When a new issue is reported, it is inserted into the AVL tree based on its ID. The tree automatically performs rotations (Left-Left, Right-Right, Left-Right, Right-Left) to maintain a height balance factor of ±1 at every node. This self-balancing property ensures fast operations regardless of insertion order.
+
+**Examples**:
+
+1. **Direct ID Search**: When a user enters "Issue #42" in the search filter, the AVL tree traverses from root to leaf in at most log₂(n) steps. With 1000 issues, this requires only ~10 comparisons versus 500 comparisons on average with a linear search.
+
+2. **Sorted Display**: The `InOrder()` traversal method visits nodes in ascending ID order (left subtree → root → right subtree), automatically producing a sorted list of all issues in O(n) time without additional sorting overhead.
+
+3. **Status Updates**: When an employee updates an Issue from "Submitted" to "InProgress", the AVL tree deletes the node, updates the issue object, and re-inserts it while maintaining balance through rotations.
+
+**Code Implementation Highlights**:
+```csharp
+// Automatic balancing after insertion
+
+// Left Left Case
+if (balance > 1 && report.ID < node.LeftNode!.Data.ID)
+{
+    return RotateRight(node);
+}
+
+// Right Right Case
+if (balance < -1 && report.ID > node.RightNode!.Data.ID)
+{
+    return RotateLeft(node);
+}
+
+// Left Right Case
+if (balance > 1 && report.ID > node.LeftNode!.Data.ID)
+{
+    node.LeftNode = RotateLeft(node.LeftNode!);
+    return RotateRight(node);
+}
+
+// Right Left Case
+if (balance < -1 && report.ID < node.RightNode!.Data.ID)
+{
+    node.RightNode = RotateRight(node.RightNode!);
+    return RotateLeft(node);
+}
+```
+<br> 
+
+**Efficiency Benefits**:
+- Search by ID: **O(log n)**
+- Insert new issue: **O(log n)**
+- In-order traversal: **O(n)**
+- Tree height with 1000 issues: **~10 levels** (vs. up to 1000 in unbalanced BST)
+
+### Graph
+
+**Location**: `DataStructures/ReportsGraph.cs` → `DataStore.ReportsGraph`
+
+**Purpose**: Models relationships between service requests to identify patterns, detect potential duplicates, and enable **Related Issues** functionality.
+
+**Role & Efficiency Contribution**:
+
+The Graph data structure captures the reality that service requests are not isolated and issues reported in the same category within a short time window are likely related (e.g., multiple potholes on the same road). By representing issues as nodes and relationships as edges, the graph enables **O(V + E)** traversal to find all connected issues, where V is vertices (issues) and E is edges (relationships).
+
+**How It Works**:
+
+Each issue is a vertex in the graph. When a new issue is added, the system compares it against existing issues and creates bidirectional edges if two conditions are met:
+1. **Same Category**: Both issues belong to the same category (e.g., "Road Damage")
+2. **Temporal Proximity**: Issues were reported within 3 days of each other (proximity could be made closer in real-world scenarios))
+
+The graph stores edges efficiently as `Dictionary<int, HashSet<int>>`, where each issue ID maps to a set of connected issue IDs.
+
+**Examples**:
+
+1. **Related Issues (BFS Traversal)**: When viewing Issue #23 (pothole on Main Street), the "Related Issues" section displays Issues #24 and #25 (also potholes on Main Street, reported 1-2 days apart). The BFS algorithm starts at Issue #23, explores immediate neighbors, then their neighbors, efficiently finding all connected issues in the cluster.
+
+2. **Duplicate Detection**: Three users report the same broken streetlight (Issues #67, #68, #69) within 2 days. The graph connects all three, and the system can flag them as potential duplicates for employee review, preventing redundant work orders.
+
+3. **Connected Components (DFS)**: The `GetAllConnectedComponents()` method uses Depth-First Search to identify clusters of related issues. For example, it might discover a cluster of 5 water-related issues in Durban North reported within a 3-day span, suggesting a systemic problem requiring coordinated resolution.
+
+**Code Implementation Highlights**:
+```csharp
+// Edge creation logic
+bool sameCategory = report.Category == other.Category;
+bool closeTime = Math.Abs((report.CreatedAt - other.CreatedAt).TotalDays) <= 3;
+
+if (sameCategory && closeTime)
+    AddEdge(report.ID, other.ID);  // Bidirectional connection
+```
+<br>
+
+**Efficiency Benefits**:
+- Find related issues (BFS): **O(V + E)** where E is typically small
+- Add new issue and create edges: **O(n)** where n is existing issues
+- Check if edge exists: **O(1)** using HashSet
+- Connected components (DFS): **O(V + E)**
+
+### Min-Heap
+
+**Location**: `DataStructures/ReportsMinHeap.cs` → `DataStore.ReportsMinHeap`
+
+**Purpose**: Optimizes the display order of service requests by sorting them based on a combined priority score that adapts to user role (user vs. employee), ensuring the most relevant issues appear first for each audience.
+
+**Role & Efficiency Contribution**:
+
+The Min-Heap provides **O(n log n)** sorting for display purposes, significantly faster than comparison-based sorts for repeatedly extracting the highest-priority items. More importantly, it allows **O(log n)** insertion of new issues and **O(1)** access to the highest-priority issue, making it ideal for dynamic priority queues where different users require different orderings.
+
+**How It Works**:
+
+The heap is a complete binary tree stored as an array where each parent node has a priority value less than or equal to its children (min-heap property). The unique aspect of this implementation is **role-based priority calculation**:
+
+**For Users**:
+1. **Primary Factor**: Issue Status with priority order:
+   - InProgress (0) - Issues actively being worked on
+   - Submitted (1) - Issues awaiting attention
+   - Resolved (2) - Completed issues
+2. **Secondary Factor**: Creation Date (newer issues prioritized within the same status)
+
+**For Employees**:
+1. **Primary Factor**: Issue Status with **inverted priority** for actionable items:
+   - Submitted (-1) - Remapped to highest priority
+   - InProgress (0) - Currently being handled
+   - Resolved (2) - Completed work
+2. **Secondary Factor**: Creation Date (newer issues prioritized within the same status)
+
+This role-based prioritization ensures users see service requests actively being worked on first, while employees see new submitted service request first (optimizing their workflow).
+
+When extracting issues for display, the heap repeatedly removes the root (minimum priority), replaces it with the last element, and performs "heapify down" to restore the heap property in O(log n) time per extraction.
+
+**Examples**:
+
+1. **User - Priority**: After filtering issues by category "Road Damage", 50 issues remain. For a citizen viewing the request status page, the heap orders them to show:
+   - All "InProgress" issues first (Status=0) - demonstrating active work
+   - Within "InProgress", newest issues appear first (showing recent activity)
+   - Then "Submitted" issues (Status=1) - pending requests
+   - Finally "Resolved" issues (Status=2) - completed work
+
+   This ordering builds public trust by highlighting that issues are actively being addressed.
+
+2. **Employee - Priority**: The same 50 issues are reordered for employees using the inverted priority:
+   - All "Submitted" issues first (remapped to -1) - requiring immediate attention
+   - Within "Submitted", newest reports appear first 
+   - Then "InProgress" issues (Status=0) - currently being handled
+   - Finally "Resolved" issues (Status=2) - for reference
+
+   This ensures employees immediately see unassigned work requiring action, optimizing task allocation.
+
+3. **Dynamic Re-Prioritization**: Consider these three issues after a status update:
+   - Issue #10: InProgress, reported 5 days ago
+   - Issue #11: Submitted, reported 2 days ago  
+   - Issue #12: InProgress, reported 1 day ago
+
+   **User sees**: #12 (InProgress, newest) → #10 (InProgress, older) → #11 (Submitted)
+   
+   **Employee sees**: #11 (Submitted, needs action) → #12 (InProgress, newest) → #10 (InProgress, older)
+
+   The same dataset produces two different priority orders optimized for each user type's needs.
+
+**Code Implementation Highlights**:
+```csharp
+private int ComparePriority(Issue issue1, Issue issue2)
+{
+    int status1 = (int)issue1.Status;
+    int status2 = (int)issue2.Status;
+
+    // Invert priority for employees: Submitted becomes highest priority
+    if (_isEmployee)
+    {
+        status1 = (issue1.Status == IssueStatus.Submitted) ? -1 : (int)issue1.Status;
+        status2 = (issue2.Status == IssueStatus.Submitted) ? -1 : (int)issue2.Status;
+    }
+
+    // Primary: Status (lower value = higher priority)
+    int statusComparison = status1.CompareTo(status2);
+    if (statusComparison != 0)
+        return statusComparison;
+    
+    // Secondary: Newer issues first within same status
+    return issue2.CreatedAt.CompareTo(issue1.CreatedAt);
+}
+```
+<br>
+
+**Efficiency Benefits**:
+- Build heap from n issues: **O(n log n)**
+- Extract minimum (highest priority): **O(log n)**
+- Peek at minimum: **O(1)**
+- Extract all sorted: **O(n log n)** total
+- Role-based priority recalculation: **O(1)** per comparison
+
+---
+
 ## Database Usage
 
 A local SQLite database is used to persist user data, reported issues, events, and announcements across sessions.
@@ -146,19 +351,11 @@ When running the application, users will be presented with a menu to choose from
 2. **Local Events and Announcements**
 3. **Service Request Status**
 
-> [!NOTE]
-> Menu item **3** is not yet implemented and will be available in future updates.
-
-### Reporting Issues
-
-When selecting _Report Issues_ from the menu, users will be met with a further sub-menu with the following options:
-
-1. **Add Issue**
-2. **Submitted Issues**
+### 1. Report Issues
 
 #### Adding an Issue
 
-Selecting _Add Issue_ will prompt the user to fill in an issue report form requiring the following details:
+Selecting _Report Issue_ will prompt the user to fill in an issue report form requiring the following details:
 
 - Address
 - Suburb
@@ -185,7 +382,7 @@ If any files have been uploaded with the issue, users will be able to download a
 
 ---
 
-### Local Events and Announcements
+### 2. Local Events and Announcements
 
 When selecting _Local Events and Announcements_ from the menu, users will be met with a single page displaying:
 - The 10 most recent announcements 
@@ -264,6 +461,38 @@ Employees can log out of their account at any time by clicking the **Logout** bu
 
 ---
 
+### 3. Service Request Status
+
+#### Service Requests
+
+Selecting _Service Request Status_ from the menu will direct all users to a service requests page which displays a list of all reported issues with the following details:
+
+- Issue ID
+- Category
+- Location (Address and Suburb)
+- Status
+- Uploaded file count
+- View Details button
+- Related Issues count
+
+This list can then be filtered using any the following criteria:
+
+- Issue ID
+- Category
+- Status
+- Start Date
+- End Date
+
+If users wish to view more details about a specific issue, they can click the **View Details** button associated with that issue. This will display the full details of the issue, including attached files (which the user can view or download) as well as any related issues that have been identified by the system.
+
+#### Service Requests (Employee Only)
+
+When an employee logs in and navigates to the Service Request Status page, they will have access to additional features that allow them to manage reported issues. These features include:
+
+- **Statistics Overview:** At the top of the page, employees will see a statistics overview section displaying key metrics such as the total number of reported issues and the number of issues in each status category.
+- **Update Issue Status:** Employees can update the status of any reported issue by clicking the **Update** button, selecting the desired updated status from a dropdown menu (only future states) and confirming their choice via the **Confirm** button. This updated status can then be viewed by all users.
+
+
 ## AI Declaration
 
 ### Demo Data Seeding
@@ -280,7 +509,7 @@ CoPilot was used to create methods to seed my database with demo data for testin
 
 **Purpose:**
 
-I workshopped with Claude to get it to help generate the css used for my Events and Announcements View.
+I workshopped with Claude to get it to help generate the css used for my Events and Announcements and Report Status views.
 Additioanlly Claude was consulted in order to help me write the necessary JavaScript to smoothen and enhance my applications UX.
 
 ### Recommendations 
@@ -299,3 +528,11 @@ Claude was then subsequently used to suggest and help develop improvements to my
 **Purpose:**
 
 Claude was used to help improve the HTML layout of my view in addition to helping me implement the in-page modal popup for event and announcements details.
+
+### Advanced Data Structures 
+
+**Tool:** Claude Sonnet 4.5
+
+**Purpose:**
+
+Claude was used to help brainstorm which advanced data structures would be best suited for my Service Request Status feature and was consulted during the development of these data structures to help me learn how they work, improve my implementations, and debug some issues I encountered.
