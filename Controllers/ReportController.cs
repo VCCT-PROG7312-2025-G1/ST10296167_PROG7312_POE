@@ -33,6 +33,7 @@ namespace ST10296167_PROG7312_POE.Controllers
             return View();
         }
 
+        // NO LONGER IN ACTIVE USE: kept for legacy reasons
         [HttpGet]
         public IActionResult ReportMenu()
         {
@@ -45,6 +46,7 @@ namespace ST10296167_PROG7312_POE.Controllers
             return View();
         }
 
+        // NO LONGER IN ACTIVE USE: kept for legacy reasons
         [HttpGet]
         public IActionResult ReportList()
         {
@@ -176,7 +178,7 @@ namespace ST10296167_PROG7312_POE.Controllers
                 await _reportService.SaveFeedback(rating, feedback);
 
                 TempData["RatingSuccess"] = "Feedback received";
-                return RedirectToAction("ReportMenu", "Report");
+                return RedirectToAction("Index", "Home");
             }
             catch (Exception ex)
             {

@@ -1,4 +1,6 @@
-﻿// Used Claude to help write the JavaScript to display images in a modal
+﻿// NO LONGER IN ACTIVE USE: kept for legacy reasons
+
+// Used Claude to help write the JavaScript to display images in a modal
 document.addEventListener("DOMContentLoaded", function () {
 
     const viewFileUrl = document.body.dataset.viewFileUrl;

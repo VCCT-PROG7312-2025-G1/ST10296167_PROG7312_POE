@@ -88,7 +88,7 @@ namespace ST10296167_PROG7312_POE.Data.DataStructures
 
         //------------------------------------------------------------------------------------------------------------------------------------------//
 
-        // Get all reports related to a given report using BFS
+        // Get all reports related to a given report using Breadth-first seach (BFS)
         public List<Issue> GetRelatedReports(int reportId)
         {
             var results = new List<Issue>();
@@ -129,6 +129,7 @@ namespace ST10296167_PROG7312_POE.Data.DataStructures
 
         //------------------------------------------------------------------------------------------------------------------------------------------//
 
+        // NOT IN ACTIVE USE: kept for legacy reasons
         // Get all groups of connected reports using DFS
         public List<List<Issue>> GetAllConnectedComponents()
         {

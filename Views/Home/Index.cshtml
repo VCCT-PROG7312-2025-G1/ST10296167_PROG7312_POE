@@ -3,13 +3,24 @@
 </head>
 
 <body>
+
+    <!-- Feedback Thank You Message -->
+    @if (TempData["RatingSuccess"] != null)
+    {
+        <div class="alert alert-info alert-dismissible fade show success-message position-fixed"
+             style="top: 80px; right: 20px; z-index: 1100; max-width: 400px;">
+            <strong>Thank You!</strong> @TempData["RatingSuccess"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
     <div class="text-center mt-5">
         <h1>Menu</h1>
         <h4>Together, we can keep our municipality running smoothly </h4>
         <hr />
 
         <div class="mt-4 d-flex flex-wrap justify-content-center gap-4">
-            <a asp-controller="Report" asp-action="ReportMenu" class="btn btn-light text-center shadow rounded p-3" style="width: 240px;">
+            <a asp-controller="Report" asp-action="Report" class="btn btn-light text-center shadow rounded p-3" style="width: 240px;">
                 <img src="~/images/report-issues.png" alt="Report Issues" style="height: 100px;" class="mb-2 img-fluid" />
                 <div class="fw-semibold fs-6 text-dark">Report Issues</div>
             </a>
@@ -27,3 +38,14 @@
         </div>
     </div>
 </body>
+
+@section Scripts {
+<script>
+    // Auto-dismiss success message after 3 seconds
+    $(document).ready(function () {
+        setTimeout(function () {
+            $('.success-message').alert('close');
+        }, 3000);
+    });
+</script>
+}
