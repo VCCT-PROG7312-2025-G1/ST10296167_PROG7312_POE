@@ -23,7 +23,7 @@
 }
 
 <!-- Back Button -->
-<a asp-action="ReportMenu" asp-controller="Report"
+<a asp-action="Index" asp-controller="Home"
    class="btn btn-secondary position-absolute"
    style="top: 100px; left: 10px; z-index: 1000;">
     &larr; Back
@@ -31,8 +31,15 @@
 
 <!-- Page Header -->
 <header class="report-status-header text-center">
-    <h1 class="main-heading">Service Request</h1>
-    <p class="sub-text">View and manage service request status</p>
+    <h1 class="main-heading">Service Requests</h1>
+    @if (Model.IsEmployee)
+    {
+        <p class="sub-text">View and manage service requests</p>
+    }
+    else
+    {
+        <p class="sub-text">View and track service requests</p>
+    }
 </header>
 
 <div class="report-status-container">
