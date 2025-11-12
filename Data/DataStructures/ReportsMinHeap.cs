@@ -7,10 +7,15 @@ namespace ST10296167_PROG7312_POE.Data.DataStructures
         private List<Issue> heap;
         private bool _isEmployee;
 
+        // Constructor
+        //------------------------------------------------------------------------------------------------------------------------------------------//
+
         public ReportsMinHeap()
         {
             heap = new List<Issue>();
         }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------//
 
         public int Count => heap.Count;
 
@@ -134,7 +139,7 @@ namespace ST10296167_PROG7312_POE.Data.DataStructures
             int status1 = (int)issue1.Status;
             int status2 = (int)issue2.Status;
 
-            // Check if user is emplyoyee to remap priorities
+            // Check if user is emplyoyee to invert priorities
             if (_isEmployee)
             {
                 status1 = (issue1.Status == IssueStatus.Submitted) ? -1 : (int)issue1.Status;

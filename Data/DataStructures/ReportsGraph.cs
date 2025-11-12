@@ -7,6 +7,9 @@ namespace ST10296167_PROG7312_POE.Data.DataStructures
         private Dictionary<int, HashSet<int>> adjacencyList;
         private Dictionary<int, Issue> reportsList;
 
+        // Constructor
+        //------------------------------------------------------------------------------------------------------------------------------------------//
+
         public ReportsGraph()
         {
             adjacencyList = new Dictionary<int, HashSet<int>>();

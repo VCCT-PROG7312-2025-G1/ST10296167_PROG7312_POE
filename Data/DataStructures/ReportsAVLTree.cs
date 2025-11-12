@@ -9,6 +9,9 @@ namespace ST10296167_PROG7312_POE.Data.DataStructures
         public int Height { get; set; }
         public Issue Data { get; set; }
 
+        // Constructor
+        //------------------------------------------------------------------------------------------------------------------------------------------//
+
         public Node(Issue report)
         {
             Data = report;
@@ -16,6 +19,8 @@ namespace ST10296167_PROG7312_POE.Data.DataStructures
             RightNode = null;
             Height = 1;
         }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------//
     }
 
     public class ReportsAVLTree
