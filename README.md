@@ -8,6 +8,9 @@
 
 ### _YouTube Demo Videos:_
 
+#### Part 3 Video
+[https://youtu.be/6WcfZJtPUOc?si=sxXgHkQqYYuPG49F](https://youtu.be/6WcfZJtPUOc?si=sxXgHkQqYYuPG49F)
+
 #### Part 2 Video
 [https://youtu.be/tAApxcHLAY8](https://youtu.be/tAApxcHLAY8)
 
@@ -130,7 +133,7 @@ The **Service Request Status** feature utilizes three advanced data structures t
 
 **Location**: `DataStructures/ReportsAVLTree.cs` -> `DataStore.ReportsAVLTree`
 
-**Purpose**: Primary storage structure for all service requests, indexed by unique Issue ID with guaranteed logarithmic time complexity for all operations.
+**Purpose**: Primary storage structure for all service requests, indexed by unique Issue ID.
 
 **Role & Efficiency Contribution**:
 
@@ -190,7 +193,7 @@ if (balance < -1 && report.ID < node.RightNode!.Data.ID)
 
 **Location**: `DataStructures/ReportsGraph.cs` → `DataStore.ReportsGraph`
 
-**Purpose**: Models relationships between service requests to identify patterns, detect potential duplicates, and enable **Related Issues** functionality.
+**Purpose**: Models relationships between service requests to identify patterns and enable **Related Issues** functionality.
 
 **Role & Efficiency Contribution**:
 
@@ -233,7 +236,7 @@ if (sameCategory && closeTime)
 
 **Location**: `DataStructures/ReportsMinHeap.cs` → `DataStore.ReportsMinHeap`
 
-**Purpose**: Optimizes the display order of service requests by sorting them based on a combined priority score that adapts to user role (user vs. employee), ensuring the most relevant issues appear first for each audience.
+**Purpose**: Optimizes the display order of service requests by sorting them based on a combined priority score that adapts to user role (user vs. employee), ensuring the most relevant issues appear first for each type.
 
 **Role & Efficiency Contribution**:
 
@@ -297,19 +300,19 @@ private int ComparePriority(Issue issue1, Issue issue2)
     int status1 = (int)issue1.Status;
     int status2 = (int)issue2.Status;
 
-    // Invert priority for employees: Submitted becomes highest priority
+    // Check if user is emplyoyee to invert priorities
     if (_isEmployee)
     {
         status1 = (issue1.Status == IssueStatus.Submitted) ? -1 : (int)issue1.Status;
         status2 = (issue2.Status == IssueStatus.Submitted) ? -1 : (int)issue2.Status;
     }
 
-    // Primary: Status (lower value = higher priority)
+    // Primary - lower status value = higher priority
     int statusComparison = status1.CompareTo(status2);
     if (statusComparison != 0)
         return statusComparison;
     
-    // Secondary: Newer issues first within same status
+    // Secondary - newer issues first = higher priority
     return issue2.CreatedAt.CompareTo(issue1.CreatedAt);
 }
 ```
